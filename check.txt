@@ -1,0 +1,77 @@
+{
+	category:"motor insurance",
+	partner:"tata aig"
+	summary:""
+	api:{
+		link:"",
+		key:"",
+		method:"",
+	}
+	fields:[
+		{
+			name:"name",
+			label:"Full Name",
+			type:"text",
+			placeholder:"Enter Full Name",
+			valueKey:"",
+			child:[]
+		},
+		{
+			label:"mobile no",
+			type:"tel",
+			name:"Phone",
+			placeholder:"Enter Mobile No",
+			valueKey:"",
+			child:[]
+		},
+		{
+			name:email
+			type:mail,
+			label:"Email Id",
+			placeholder:"Enter Email Id",
+			valueKey:,
+			child:[]
+		},
+		{
+			name:manufacturer,
+			type:select,
+			label:"Manufacturer",
+			placeholder:"Enter Manufacturer",
+			valueKey:"k1",
+			child:[model]
+		},
+		{
+			label:model,
+			type:select,
+			name:"model",
+			placeholder:"Enter Model"
+			valueKey:"k1",
+			child:[varaint]
+		},{
+			label:varaint,
+			placeholder:"Enter variant",
+			name:"variant",
+			type:select,
+			valueKey:"k1",
+		}
+	],
+	valueKey:[{key:"k1",manufacturer:
+	[
+		{
+			name:"maruti",model:[
+				{name:"alto",varaiant:["std","lxi","lx","vx"]},
+				{name:"swift",varaiant:["std","lxi","lx","vx"]}
+			]
+		},
+		{
+			name:"hyundai",model:[
+				{name:"creta",varaiant:["std","lxi","lx","vx"]},
+				{name:"verna",varaiant:["std","lxi","lx","vx"]}
+			]
+		}
+		
+	}
+	]
+
+}
+
