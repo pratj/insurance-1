@@ -11,7 +11,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.query.Query
 import org.springframework.stereotype.Service
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
@@ -23,82 +22,118 @@ class Service {
     @Autowired
     var mongoTemplate: MongoTemplate? = null
     var dao: Dao? = null
-    fun getHandling():String{
-        return ""
-    }
+
+
     fun findUniqueCategory(): List<Document>? {
-        dao= mongoTemplate?.let { Dao(it) }
-        var fields:Document= Document()
+        dao = mongoTemplate?.let { Dao(it) }
+        val fields = Document()
         fields["category"] = 1
-        fields["product"]=1
+        fields["product"] = 1
         fields["info"] = 1
-        fields["image"]=1
-        return dao?.findFields("formConfig",fields)
+        fields["image"] = 1
+        return dao?.findFields("formConfig", fields)
 
     }
-    fun findFormConfig(category:String,product:String): List<Document>? {
-        dao= mongoTemplate?.let { Dao(it) }
-        var query:Document= Document()
-        query.put("category",category)
-        query.put("product",product)
-        return dao?.find("formConfig",query)
+
+    fun findFormConfig(category: String, product: String): List<Document>? {
+        dao = mongoTemplate?.let { Dao(it) }
+        val query = Document()
+        query["category"] = category
+        query["product"] = product
+        return dao?.find("formConfig", query)
 
     }
+
     @Throws(UnsupportedEncodingException::class)
     private fun encodeValue(value: String?): String {
         return URLEncoder.encode(value, StandardCharsets.UTF_8.toString())
     }
-    fun apiRequests(data:String){
-        dao= mongoTemplate?.let { Dao(it) }
+
+    fun apiRequests(data: String):List<Document> {
+        dao = mongoTemplate?.let { Dao(it) }
         val jsonData = JSONObject(data)
-        val query:Document= Document()
-        query.put("category",jsonData.getString("category"))
-        val partners= dao?.find("partners",query)
+        val query = Document()
+        query["category"] = jsonData.getString("category")
+        //val quotes= JSONArray()
+        var quotes: MutableList<Document> = ArrayList<Document>()
+
+        val partners = dao?.find("partners", query)
         if (partners != null) {
-            for(partner in partners){
-                val curPartner=JSONObject(partner.toJson())
-                var request:Request.Builder?
-                var inputData=mapFields(jsonData.getJSONObject("formData"),curPartner.getJSONArray("inputField"))
-                if(curPartner.getJSONObject("api").getString("method").equals("GET")){
+            for (partner in partners) {
+                val curPartner = JSONObject(partner.toJson())
+                var request: Request.Builder?
+                val inputData = mapFields(jsonData.getJSONObject("formData"), curPartner.getJSONArray("inputField"))
+                request = if (curPartner.getJSONObject("api").getString("method").equals("GET")) {
 
-                  request = getOkHttp(inputData,curPartner)
+                    getOkHttp(inputData, curPartner)
 
-                }else{
+                } else {
 
-                   request= postOkHttp(inputData,curPartner)
+                    postOkHttp(inputData, curPartner)
+                }
+                val headers = curPartner.getJSONObject("api").getJSONArray("headers")
+                for (i in 0 until headers.length()) {
+                    val header = headers.getJSONObject(i)
+                    if (header.getString("header") != "" && header.getString("value") != "") {
+                        if (request != null) {
+                            request = request.addHeader(header.getString("header"), header.getString("value"))
+                        }
+                    }
                 }
                 val client = OkHttpClient()
                 val call = request?.let { client.newCall(it.build()) }
 
                 val response = call?.execute()
 
-                var resData = response?.body()!!.string()
+                val resData = response?.body()!!.string()
+                var quote=mapOFields(JSONObject(resData),curPartner.getJSONArray("outputField"))
+                //val quote=JSONObject()
+                quote.put("partner",curPartner.getString("partner"))
+                quote.put("image",curPartner.getString("image"))
 
-
+                quotes.add(Document.parse(quote.toString()))
             }
 
         }
-    }
-    fun mapOFields(data: JSONObject,map: JSONArray):JSONObject{
+        jsonData.put("quotes",quotes)
 
+        dao?.insert("quotes",Document.parse(jsonData.toString()))
+        return quotes
     }
-    fun mapFields(data: JSONObject,map:JSONArray):JSONObject{
-        var output =JSONObject()
-        for(i in 0 until map.length()){
-            if(data.has(map.getJSONObject(i).getString("from"))){
-                output.put(map.getJSONObject(i).getString("to"),data.getString(map.getJSONObject(i).getString("from")))
-            }
-            else{
-                output.put(map.getJSONObject(i).getString("to"),"")
+
+    fun mapOFields(data: JSONObject, map: JSONArray): JSONObject {
+        val output = JSONObject()
+        for (i in 0 until map.length()) {
+            if (data.has(map.getJSONObject(i).getString("from"))) {
+                if (!output.has(map.getJSONObject(i).getString("to"))) {
+                    output.put(map.getJSONObject(i).getString("to"), data.getString(map.getJSONObject(i).getString("from")))
+                } else {
+                    output.put(map.getJSONObject(i).getString("to"), output.getString(map.getJSONObject(i).getString("to")) + "\n" + data.getString(map.getJSONObject(i).getString("from")))
+                }
+            } else {
+                output.put(map.getJSONObject(i).getString("to"), "")
             }
         }
         return output
     }
-    fun getOkHttp(data:JSONObject,partner:JSONObject): Request.Builder? {
+
+    fun mapFields(data: JSONObject, map: JSONArray): JSONObject {
+        val output = JSONObject()
+        for (i in 0 until map.length()) {
+            if (data.has(map.getJSONObject(i).getString("from"))) {
+                output.put(map.getJSONObject(i).getString("to"), data.getString(map.getJSONObject(i).getString("from")))
+            } else {
+                output.put(map.getJSONObject(i).getString("to"), "")
+            }
+        }
+        return output
+    }
+
+    fun getOkHttp(data: JSONObject, partner: JSONObject): Request.Builder? {
         var request = Request.Builder().url(partner.getJSONObject("api").getString("path"))
         val map: HashMap<String, String>
         val mapper = ObjectMapper()
-        map = mapper.readValue<Map<String, String>>(data.toString(), object : TypeReference<Map<String, String>>() {}) as HashMap<String, String>
+        map = mapper.readValue(data.toString(), object : TypeReference<Map<String, String>>() {}) as HashMap<String, String>
         var combine = "="
         var combine1 = "&"
         var combine2 = "?"
@@ -124,10 +159,11 @@ class Service {
         return request
 
     }
-    fun postOkHttp(data:JSONObject,partner:JSONObject):Request.Builder{
+
+    fun postOkHttp(data: JSONObject, partner: JSONObject): Request.Builder {
         var request = Request.Builder().url(partner.getJSONObject("api").getString("path"))
         val body = okhttp3.RequestBody.create(MediaType.get("application/json; charset=utf-8"), data.toString())
         request = request.post(body)
-        return request;
+        return request
     }
 }
