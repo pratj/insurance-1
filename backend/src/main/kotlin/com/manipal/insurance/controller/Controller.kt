@@ -28,9 +28,15 @@ class Controller {
     fun addConfig(@RequestBody data: String?): ResponseEntity<String?> {
         dao = mongoTemplate?.let { Dao(it) }
         val jsonData = JSONObject(data)
+        if(jsonData.has("partners")){
+            for(i in 0 until jsonData.getJSONArray("partners").length()){
+                dao?.insert("partners",Document.parse(jsonData.getJSONArray("partners").getJSONObject(i).toString()))
+            }
+            jsonData.remove("partners")
+        }
         println(jsonData.toString())
         val doc = Document.parse(data)
-        dao?.find("requests", doc)
+        dao?.insert("formConfig", doc)
         val headers = HttpHeaders()
         headers.add("Response-from", "ToDoController")
         return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
@@ -43,7 +49,6 @@ class Controller {
 
     @GetMapping("/config/category/{category}/product/{product}")
     fun retrieveConfig(@PathVariable category: String, @PathVariable product: String): List<Document>? {
-
         return service?.findFormConfig(category, product)
     }
 

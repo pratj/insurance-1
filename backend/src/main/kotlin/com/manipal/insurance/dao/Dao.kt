@@ -1,16 +1,14 @@
 package com.manipal.insurance.dao
 
-import com.mongodb.client.FindIterable
 import org.bson.Document
 import org.springframework.data.mongodb.core.MongoTemplate
-import java.util.*
-import kotlin.collections.ArrayList
 
 class Dao(mongoTemplate: MongoTemplate) {
     private var mongoTemplate: MongoTemplate = mongoTemplate
     fun insert(dbName: String, doc: Document) {
         println(doc.toString())
         println(dbName)
+
         mongoTemplate.save(doc, dbName)
 
     }
