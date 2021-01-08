@@ -4,6 +4,7 @@ import com.mongodb.client.FindIterable
 import org.bson.Document
 import org.springframework.data.mongodb.core.MongoTemplate
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Dao(mongoTemplate: MongoTemplate) {
     private var mongoTemplate: MongoTemplate = mongoTemplate
@@ -11,36 +12,40 @@ class Dao(mongoTemplate: MongoTemplate) {
         println(doc.toString())
         println(dbName)
         mongoTemplate.save(doc, dbName)
-        mongoTemplate.execute(dbName) { mongoCollection ->
-            val list: List<Document> = ArrayList<Document>()
-            mongoCollection.insertOne(doc)
-            list
-        }
+
     }
 
     fun findAll(dbName: String): List<Document> {
         return mongoTemplate.execute(dbName) { mongoCollection ->
-            val list: MutableList<Document> = ArrayList<Document>()
-            val cursor: FindIterable<Document> = mongoCollection.find()
-            val it: Iterator<*> = cursor.iterator()
-            while (it.hasNext()) {
-                list.add(it.next() as Document)
-            }
+            var list: MutableList<Document> = ArrayList<Document>()
+            list = mongoCollection.find().into(ArrayList<Document>())
             list
         }
     }
-
-    fun find(dbName: String, doc: Document): List<Document> {
+    fun findFields(dbName: String, query: Document,fields:Document): List<Document> {
         //System.out.println(mongoTemplate);
+
         return mongoTemplate.execute(dbName) { mongoCollection ->
-            val list: MutableList<Document> = ArrayList<Document>()
-            //System.out.println("no");
-            val cursor: FindIterable<Document> = mongoCollection.find(doc)
-            val it: Iterator<*> = cursor.iterator()
-            while (it.hasNext()) {
-                //System.out.println("yes");
-                list.add(it.next() as Document)
-            }
+            var list: MutableList<Document> = ArrayList<Document>()
+            list= mongoCollection.find(query).projection(fields).into(ArrayList<Document>())
+            list
+        }
+    }
+    fun findFields(dbName: String,fields:Document): List<Document> {
+        //System.out.println(mongoTemplate);
+
+        return mongoTemplate.execute(dbName) { mongoCollection ->
+            var list: MutableList<Document> = ArrayList<Document>()
+            list= mongoCollection.find().projection(fields).into(ArrayList<Document>())
+            list
+        }
+    }
+    fun find(dbName: String, query: Document): List<Document> {
+        //System.out.println(mongoTemplate);
+
+        return mongoTemplate.execute(dbName) { mongoCollection ->
+            var list: MutableList<Document> = ArrayList<Document>()
+            list = mongoCollection.find(query).into(ArrayList<Document>())
             list
         }
     }

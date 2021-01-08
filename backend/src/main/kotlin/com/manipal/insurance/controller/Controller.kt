@@ -4,6 +4,7 @@ package com.manipal.insurance.controller
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.manipal.insurance.dao.Dao
+import com.manipal.insurance.service.Service
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -26,6 +27,8 @@ import java.util.stream.Collectors
 class Controller {
     @Autowired
     var mongoTemplate: MongoTemplate? = null
+    @Autowired
+    var service: Service?=null
     var dao: Dao? = null
     @PostMapping("/config")
     @Throws(JSONException::class)
@@ -39,13 +42,14 @@ class Controller {
         headers.add("Response-from", "ToDoController")
         return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
     }
+    @GetMapping("/categories")
+    fun retrieveCategory():List<Document>?{
+        return service?.findUniqueCategory()
+    }
+    @GetMapping("/config/category/{category}/product/{product}")
+    fun retrieveConfig(@PathVariable category: String,@PathVariable product:String): List<Document>? {
 
-    @GetMapping("/config/category/{category}")
-    fun retrieveConfig(@PathVariable category: String?): List<Document>? {
-        dao = mongoTemplate?.let { Dao(it) }
-        val doc = Document()
-        doc["category"] = category
-        return dao?.find("Configurations", doc)
+        return service?.findFormConfig(category,product)
     }
 
     @Throws(UnsupportedEncodingException::class)
@@ -55,7 +59,7 @@ class Controller {
 
     @PostMapping("/response")
     @Throws(Exception::class)
-    fun getData(@RequestBody data: String?): String {
+    fun getData(@RequestBody data: String): String {
         dao = mongoTemplate?.let { Dao(it) }
         val jsonData = JSONObject(data)
         val map: HashMap<String, String>
