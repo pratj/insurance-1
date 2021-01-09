@@ -35,7 +35,18 @@ class Controller {
             jsonData.remove("partners")
         }
         println(jsonData.toString())
-        val doc = Document.parse(data)
+
+        val configs=service?.findFormConfig(jsonData.getString("category"),jsonData.getString("product"))
+
+        if (configs != null) {
+            if(configs.isNotEmpty()){
+                var dat=configs[0]
+
+jsonData.put("_id",dat["_id"])
+            }
+        }
+
+        val doc = Document.parse(jsonData.toString())
         dao?.insert("formConfig", doc)
         val headers = HttpHeaders()
         headers.add("Response-from", "ToDoController")

@@ -8,8 +8,15 @@ class Dao(mongoTemplate: MongoTemplate) {
     fun insert(dbName: String, doc: Document) {
         println(doc.toString())
         println(dbName)
+        //mongoTemplate.save(doc, dbName)
 
-        mongoTemplate.save(doc, dbName)
+        mongoTemplate.execute(dbName) { mongoCollection ->
+            var list: MutableList<Document> = ArrayList<Document>()
+            mongoCollection.findOneAndDelete(doc)
+            mongoCollection.insertOne(doc)
+
+            list
+        }
 
     }
 
