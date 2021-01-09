@@ -157,7 +157,7 @@
               "Content-Type": "application/json"
             },
             "body": {
-              "value": "6900",
+              "value": "3500",
               "rating": "3/5",
               "benefits": "24*7 security"
             }
@@ -169,7 +169,7 @@
               "Content-Type": "application/json"
             },
             "body": {
-              "value": "7000",
+              "value": "3000",
               "ratings": "4.5/5",
               "benefits": "24*7 security,ticket cancellation claim"
             }
