@@ -4,6 +4,7 @@ package com.manipal.insurance.controller
 import com.manipal.insurance.dao.Dao
 import com.manipal.insurance.service.Service
 import org.bson.Document
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
@@ -22,7 +23,16 @@ class Controller {
     @Autowired
     var service: Service? = null
     var dao: Dao? = null
-
+    @PostMapping("/configs")
+    fun addAllConfigs(@RequestBody data: String?):ResponseEntity<String?>{
+        val jsonData = JSONArray(data)
+        for(i in 0 until jsonData.length()){
+            addConfig(jsonData.get(i).toString())
+        }
+        val headers = HttpHeaders()
+        headers.add("Response-from", "ToDoController")
+        return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
+    }
     @PostMapping("/config")
     @Throws(JSONException::class)
     fun addConfig(@RequestBody data: String?): ResponseEntity<String?> {
@@ -49,7 +59,6 @@ class Controller {
         if (configs != null) {
             if (configs.isNotEmpty()) {
                 var dat = configs[0]
-//println("im dispalying")
                 jsonData.put("_id", dat["_id"])
                 configs?.get(0)?.let { dao?.delete("formConfig", it) }
             }

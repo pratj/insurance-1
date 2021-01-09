@@ -87,7 +87,6 @@ class Service {
 
                 val resData = response?.body()!!.string()
                 var quote=mapOFields(JSONObject(resData),curPartner.getJSONArray("outputField"))
-                //val quote=JSONObject()
                 quote.put("partner",curPartner.getString("partner"))
                 quote.put("image",curPartner.getString("image"))
 
