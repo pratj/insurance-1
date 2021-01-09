@@ -35,7 +35,7 @@
         "partner": "Tata AIG",
         "image": "https://www.tataaig.com/logo.png",
         "api": {
-          "path": "http://localhost:9000/motor-insurance/car-insurance/tata-aig/quote",
+          "path": "http://localhost:9000/motor-insurance/car-insurance/tata-aig/quote/",
           "method": "GET",
           "uriType": "/",
           "headers": []
@@ -211,8 +211,8 @@
             "to": "quote"
           },
           {
-            "from": "idv",
-            "to": "IDV"
+            "from": "ratings",
+            "to": "ratings"
           },
           {
             "from": "benefits",
