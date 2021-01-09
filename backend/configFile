@@ -173,8 +173,8 @@
             "to": "quote"
           },
           {
-            "from": "idv",
-            "to": "IDV"
+            "from": "rating",
+            "to": "ratings"
           },
           {
             "from": "benefits",

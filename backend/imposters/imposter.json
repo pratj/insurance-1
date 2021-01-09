@@ -147,6 +147,43 @@
           }
         }
       ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "6900",
+              "rating": "3/5",
+              "benefits": "24*7 security"
+            }
+          }
+        },{
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "7000",
+              "ratings": "4.5/5",
+              "benefits": "24*7 security,ticket cancellation claim"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "path": "/travel-insurance/overseas-insurance/bajaj-allianz/quote",
+            "method": "POST"
+          }
+        }
+      ]
     }
 
   ]
