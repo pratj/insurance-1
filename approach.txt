@@ -1,0 +1,38 @@
+configuration files
+{
+	category:
+	partner:
+	summary;
+	fields:[
+		{
+			label:
+			name:
+			type:
+			valueKey:
+			placeholder:
+			condition:
+			child:[label0]
+		},
+		.....
+		],
+	valueKey:[{key:,data:{label1:,label2:,label3:}}]
+
+}
+{
+	category:
+	partner:
+	apiLink:
+	apiKey:
+	apiMethod:
+}
+form data
+{
+	category:
+	partner:
+	data:{
+		label1:
+		label2:
+		label3:
+		....labeln:
+	}
+}
