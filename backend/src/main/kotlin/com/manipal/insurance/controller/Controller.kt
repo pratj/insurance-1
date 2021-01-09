@@ -28,23 +28,34 @@ class Controller {
     fun addConfig(@RequestBody data: String?): ResponseEntity<String?> {
         dao = mongoTemplate?.let { Dao(it) }
         val jsonData = JSONObject(data)
-        if(jsonData.has("partners")){
-            for(i in 0 until jsonData.getJSONArray("partners").length()){
-                dao?.insert("partners",Document.parse(jsonData.getJSONArray("partners").getJSONObject(i).toString()))
+        if (jsonData.has("partners")) {
+            for (i in 0 until jsonData.getJSONArray("partners").length()) {
+                var curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
+                curPartner.put("category", jsonData.getString("category"))
+                curPartner.put("product", jsonData.getString("product"))
+                var query=Document()
+                query["category"]=curPartner.getString("category")
+                query["product"]=curPartner.getString("product")
+                query["partner"]=curPartner.getString("partner")
+                dao?.delete("partners",query)
+                dao?.insert("partners", Document.parse(curPartner.toString()))
             }
             jsonData.remove("partners")
         }
         println(jsonData.toString())
 
-        val configs=service?.findFormConfig(jsonData.getString("category"),jsonData.getString("product"))
+        val configs = service?.findFormConfig(jsonData.getString("category"), jsonData.getString("product"))
 
         if (configs != null) {
-            if(configs.isNotEmpty()){
-                var dat=configs[0]
-
-jsonData.put("_id",dat["_id"])
+            if (configs.isNotEmpty()) {
+                var dat = configs[0]
+//println("im dispalying")
+                jsonData.put("_id", dat["_id"])
+                configs?.get(0)?.let { dao?.delete("formConfig", it) }
             }
+
         }
+
 
         val doc = Document.parse(jsonData.toString())
         dao?.insert("formConfig", doc)
@@ -65,7 +76,7 @@ jsonData.put("_id",dat["_id"])
 
     @PostMapping("/response")
     @Throws(Exception::class)
-    fun getData(@RequestBody data: String):List<Document> ?{
-    return service?.apiRequests(data)
+    fun getData(@RequestBody data: String): List<Document>? {
+        return service?.apiRequests(data)
     }
 }

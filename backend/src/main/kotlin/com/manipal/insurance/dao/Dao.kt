@@ -12,13 +12,14 @@ class Dao(mongoTemplate: MongoTemplate) {
 
         mongoTemplate.execute(dbName) { mongoCollection ->
             var list: MutableList<Document> = ArrayList<Document>()
-            mongoCollection.findOneAndDelete(doc)
+
             mongoCollection.insertOne(doc)
 
             list
         }
 
     }
+
 
     fun findAll(dbName: String): List<Document> {
         return mongoTemplate.execute(dbName) { mongoCollection ->
@@ -52,6 +53,15 @@ class Dao(mongoTemplate: MongoTemplate) {
             var list: MutableList<Document> = ArrayList<Document>()
             list = mongoCollection.find(query).into(ArrayList<Document>())
             list
+        }
+    }
+    fun delete(dbName: String, query: Document){
+        //System.out.println(mongoTemplate);
+
+        mongoTemplate.execute(dbName) { mongoCollection ->
+            var list: MutableList<Document> = ArrayList<Document>()
+            mongoCollection.findOneAndDelete(query)
+
         }
     }
 
