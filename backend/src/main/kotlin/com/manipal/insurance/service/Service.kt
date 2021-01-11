@@ -54,6 +54,7 @@ class Service {
         val jsonData = JSONObject(data)
         val query = Document()
         query["category"] = jsonData.getString("category")
+        var dbQuotes=JSONArray()
         //val quotes= JSONArray()
         var quotes: MutableList<Document> = ArrayList<Document>()
 
@@ -91,11 +92,12 @@ class Service {
                 quote.put("partner",curPartner.getString("partner"))
                 quote.put("image",curPartner.getString("image"))
                 quote.put("quote",quote)
+                dbQuotes.put(quote)
                 quotes.add(Document.parse(quote.toString()))
             }
 
         }
-        jsonData.put("quotes",quotes)
+        jsonData.put("quotes",dbQuotes)
 
         dao?.insert("quotes",Document.parse(jsonData.toString()))
         return quotes
