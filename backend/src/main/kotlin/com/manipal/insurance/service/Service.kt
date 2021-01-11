@@ -34,7 +34,10 @@ class Service {
         return dao?.findFields("formConfig", fields)
 
     }
-
+    fun addPartner(data:String){
+        var jsonData=JSONObject(data)
+        dao?.insert("partner",Document.parse(jsonData.toString()))
+    }
     fun findFormConfig(category: String, product: String): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
         val query = Document()

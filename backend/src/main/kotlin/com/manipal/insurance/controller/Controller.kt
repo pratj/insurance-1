@@ -88,4 +88,9 @@ class Controller {
     fun getData(@RequestBody data: String): List<Document>? {
         return service?.apiRequests(data)
     }
+    @PostMapping("/addPartner")
+    fun addPartner(@RequestBody data:String):String{
+        service?.addPartner(data)
+        return "successfully"
+    }
 }
