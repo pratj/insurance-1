@@ -3,14 +3,20 @@ package com.manipal.insurance.service
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.manipal.insurance.dao.Dao
+import com.mongodb.client.model.Accumulators
+import com.mongodb.client.model.Aggregates
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.bson.Document
+import org.bson.conversions.Bson
 import org.json.JSONArray
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.aggregation.Aggregation.group
+import org.springframework.data.mongodb.core.aggregation.GroupOperation
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
@@ -21,6 +27,9 @@ import java.util.stream.Collectors
 class Service {
     @Autowired
     var mongoTemplate: MongoTemplate? = null
+
+    @Autowired
+    private val kafkaTemplate: KafkaTemplate<String, String>? = null
     var dao: Dao? = null
 
 
@@ -34,9 +43,10 @@ class Service {
         return dao?.findFields("formConfig", fields)
 
     }
-    fun addPartner(data:String){
+    fun addPartner(data: String){
+        dao = mongoTemplate?.let { Dao(it) }
         var jsonData=JSONObject(data)
-        dao?.insert("partner",Document.parse(jsonData.toString()))
+        dao?.insert("partner", Document.parse(jsonData.toString()))
     }
     fun findFormConfig(category: String, product: String): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
@@ -86,38 +96,65 @@ class Service {
                 }
                 val client = OkHttpClient()
                 val call = request?.let { client.newCall(it.build()) }
-
                 val response = call?.execute()
-
                 val resData = response?.body()!!.string()
-                //println(resData)
-                var res=mapOFields(JSONObject(resData),curPartner.getJSONArray("outputField"))
-                //println(quote1)
-                //println("vvfvv")
+                var res=mapOFields(JSONObject(resData), curPartner.getJSONArray("outputField"))
                 println(curPartner.getString("partner"))
                 var quote=JSONObject()
-
-                //quote.put("ww",123)
-                //print(0)
-                quote.put("partner",curPartner.getString("partner"))
-                //print("1")
-                quote.put("image",curPartner.getString("image"))
-                //print(2)
-                quote.put("quote",res)
-                //print(3)
+                quote.put("partner", curPartner.getString("partner"))
+                quote.put("image", curPartner.getString("image"))
+                quote.put("quote", res)
                 println(quote.toString())
                 dbQuotes.put(quote)
+
                 quotes.add(Document.parse(quote.toString()))
             }
 
         }
-        jsonData.put("quotes",dbQuotes)
-
-        dao?.insert("quotes",Document.parse(jsonData.toString()))
+        jsonData.put("quotes", dbQuotes)
+        kafkaTemplate?.send("pipe",jsonData.toString())
+        dao?.insert("quotes", Document.parse(jsonData.toString()))
         return quotes
     }
+    fun categoryPartnersCount():List<Document>? {
+        dao = mongoTemplate?.let { Dao(it) }
+        var list: MutableList<Bson> = ArrayList<Bson>()
 
+        list.add(Aggregates.group("\$category", Accumulators.sum("partnerCount", 1)))
+        var project=Document()
+        project["_id"]=0
+        project["category"]="\$_id"
+        project["partnerCount"]=1
+        list.add(Aggregates.project(project))
+        return dao?.aggregate("partners",list)
+        //return Document.parse(output.toString())
+    }
+    fun partnerCategoryCount():List<Document>? {
+        dao = mongoTemplate?.let { Dao(it) }
+        var list: MutableList<Bson> = ArrayList<Bson>()
+        list.add(Aggregates.group("\$partner", Accumulators.sum("count", 1)))
+        var project=Document()
+        project["_id"]=0
+        project["partner"]="\$_id"
+        project["count"]=1
+        list.add(Aggregates.project(project))
+        return dao?.aggregate("partners",list)
+        //return Document.parse(output.toString())
+    }
+    fun categoryRequests():List<Document>? {
+        dao = mongoTemplate?.let { Dao(it) }
+        var list: MutableList<Bson> = ArrayList<Bson>()
+        list.add(Aggregates.group("\$category", Accumulators.sum("count", 1)))
+        var project=Document()
+        project["_id"]=0
+        project["category"]="\$_id"
+        project["count"]=1
+        list.add(Aggregates.project(project))
+        return dao?.aggregate("quotes",list)
+        //return Document.parse(output.toString())
+    }
     fun mapOFields(data: JSONObject, map: JSONArray): JSONObject {
+
         val output = JSONObject()
         for (i in 0 until map.length()) {
             if (data.has(map.getJSONObject(i).getString("from"))) {

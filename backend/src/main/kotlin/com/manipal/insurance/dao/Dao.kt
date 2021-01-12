@@ -1,7 +1,11 @@
 package com.manipal.insurance.dao
 
+import com.mongodb.client.model.Accumulators
 import org.bson.Document
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.core.aggregation.GroupOperation
+import com.mongodb.client.model.Aggregates;
+import org.bson.conversions.Bson
 
 class Dao(mongoTemplate: MongoTemplate) {
     private var mongoTemplate: MongoTemplate = mongoTemplate
@@ -9,7 +13,6 @@ class Dao(mongoTemplate: MongoTemplate) {
         println(doc.toString())
         println(dbName)
         //mongoTemplate.save(doc, dbName)
-
         mongoTemplate.execute(dbName) { mongoCollection ->
             var list: MutableList<Document> = ArrayList<Document>()
 
@@ -62,6 +65,19 @@ class Dao(mongoTemplate: MongoTemplate) {
             var list: MutableList<Document> = ArrayList<Document>()
             mongoCollection.findOneAndDelete(query)
 
+        }
+    }
+    fun aggregate(dbName: String,query:MutableList<Bson>): List<Document> {
+        print("no")
+
+       return mongoTemplate.execute(dbName) { mongoCollection ->
+
+
+           //print(list.toString())
+            var list1=mongoCollection.aggregate(query)
+           //print("yes")
+           //print(list1.toString())
+           return@execute list1.toMutableList()
         }
     }
 

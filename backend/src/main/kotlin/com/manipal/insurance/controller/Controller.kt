@@ -88,6 +88,18 @@ class Controller {
     fun getData(@RequestBody data: String): List<Document>? {
         return service?.apiRequests(data)
     }
+    @GetMapping("/category/partner/count")
+    fun getCategoryPartner(): List<Document>? {
+        return service?.categoryPartnersCount()
+    }
+    @GetMapping("/partner/category/count")
+    fun getPartnerCategoryCount(): List<Document>? {
+        return service?.partnerCategoryCount()
+    }
+    @GetMapping("/category/request/count")
+    fun categoryRequestCount(): List<Document>? {
+        return service?.categoryRequests()
+    }
     @PostMapping("/addPartner")
     fun addPartner(@RequestBody data:String):String{
         service?.addPartner(data)
