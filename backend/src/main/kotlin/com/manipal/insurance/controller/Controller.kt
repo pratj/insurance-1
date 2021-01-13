@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -21,33 +22,39 @@ class Controller {
     var mongoTemplate: MongoTemplate? = null
 
     @Autowired
+    private val kafkaTemplate: KafkaTemplate<String, String>? = null
+
+    @Autowired
     var service: Service? = null
     var dao: Dao? = null
+
     @PostMapping("/configs")
-    fun addAllConfigs(@RequestBody data: String?):ResponseEntity<String?>{
+    fun addAllConfigs(@RequestBody data: String?): ResponseEntity<String?> {
         val jsonData = JSONArray(data)
-        for(i in 0 until jsonData.length()){
+        for (i in 0 until jsonData.length()) {
             addConfig(jsonData.get(i).toString())
         }
         val headers = HttpHeaders()
         headers.add("Response-from", "ToDoController")
         return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
     }
+
     @PostMapping("/config")
     @Throws(JSONException::class)
     fun addConfig(@RequestBody data: String?): ResponseEntity<String?> {
         dao = mongoTemplate?.let { Dao(it) }
+        var flag = true
         val jsonData = JSONObject(data)
         if (jsonData.has("partners")) {
             for (i in 0 until jsonData.getJSONArray("partners").length()) {
                 var curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
                 curPartner.put("category", jsonData.getString("category"))
                 curPartner.put("product", jsonData.getString("product"))
-                var query=Document()
-                query["category"]=curPartner.getString("category")
-                query["product"]=curPartner.getString("product")
-                query["partner"]=curPartner.getString("partner")
-                dao?.delete("partners",query)
+                var query = Document()
+                query["category"] = curPartner.getString("category")
+                query["product"] = curPartner.getString("product")
+                query["partner"] = curPartner.getString("partner")
+                dao?.delete("partners", query)
                 dao?.insert("partners", Document.parse(curPartner.toString()))
             }
             jsonData.remove("partners")
@@ -58,11 +65,15 @@ class Controller {
 
         if (configs != null) {
             if (configs.isNotEmpty()) {
+                flag = false
                 var dat = configs[0]
                 jsonData.put("_id", dat["_id"])
                 configs?.get(0)?.let { dao?.delete("formConfig", it) }
             }
 
+        }
+        if (flag) {
+            kafkaTemplate?.send("pipe", jsonData.toString())
         }
 
 
@@ -88,20 +99,24 @@ class Controller {
     fun getData(@RequestBody data: String): List<Document>? {
         return service?.apiRequests(data)
     }
+
     @GetMapping("/category/partner/count")
     fun getCategoryPartner(): List<Document>? {
         return service?.categoryPartnersCount()
     }
+
     @GetMapping("/partner/category/count")
     fun getPartnerCategoryCount(): List<Document>? {
         return service?.partnerCategoryCount()
     }
+
     @GetMapping("/category/request/count")
     fun categoryRequestCount(): List<Document>? {
         return service?.categoryRequests()
     }
+
     @PostMapping("/addPartner")
-    fun addPartner(@RequestBody data:String):String{
+    fun addPartner(@RequestBody data: String): String {
         service?.addPartner(data)
         return "successfully"
     }
