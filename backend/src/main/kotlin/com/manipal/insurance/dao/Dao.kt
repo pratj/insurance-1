@@ -1,11 +1,8 @@
 package com.manipal.insurance.dao
 
-import com.mongodb.client.model.Accumulators
 import org.bson.Document
-import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.aggregation.GroupOperation
-import com.mongodb.client.model.Aggregates;
 import org.bson.conversions.Bson
+import org.springframework.data.mongodb.core.MongoTemplate
 
 class Dao(mongoTemplate: MongoTemplate) {
     private var mongoTemplate: MongoTemplate = mongoTemplate

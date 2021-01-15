@@ -50,12 +50,8 @@ class Controller {
                 var curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
                 curPartner.put("category", jsonData.getString("category"))
                 curPartner.put("product", jsonData.getString("product"))
-                var query = Document()
-                query["category"] = curPartner.getString("category")
-                query["product"] = curPartner.getString("product")
-                query["partner"] = curPartner.getString("partner")
-                dao?.delete("partners", query)
-                dao?.insert("partners", Document.parse(curPartner.toString()))
+                service?.addPartner(curPartner.toString())
+                //dao?.insert("partners", Document.parse(curPartner.toString()))
             }
             jsonData.remove("partners")
         }
@@ -73,7 +69,7 @@ class Controller {
 
         }
         if (flag) {
-            kafkaTemplate?.send("pipe", jsonData.toString())
+            kafkaTemplate?.send("pipe", "insurance,$jsonData")
         }
 
 

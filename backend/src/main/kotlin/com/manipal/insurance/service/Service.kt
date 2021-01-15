@@ -14,8 +14,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.aggregation.Aggregation.group
-import org.springframework.data.mongodb.core.aggregation.GroupOperation
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import java.io.UnsupportedEncodingException
@@ -46,7 +44,25 @@ class Service {
     fun addPartner(data: String){
         dao = mongoTemplate?.let { Dao(it) }
         var jsonData=JSONObject(data)
-        dao?.insert("partner", Document.parse(jsonData.toString()))
+        val query = Document()
+        query["category"] = jsonData.getString("category")
+        query["product"]=jsonData.getString("product")
+        query["partner"]=jsonData.getString("partner")
+        var partners=dao?.find("partners",query)
+        var flag=true
+        if (partners != null) {
+            if (partners.isNotEmpty()) {
+                flag = false
+                var dat = partners[0]
+                jsonData.put("_id", dat["_id"])
+                partners?.get(0)?.let { dao?.delete("partners", it) }
+            }
+
+        }
+        if (flag) {
+            kafkaTemplate?.send("pipe", "partner,$jsonData")
+        }
+        dao?.insert("partners", Document.parse(jsonData.toString()))
     }
     fun findFormConfig(category: String, product: String): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
@@ -63,10 +79,12 @@ class Service {
     }
 
     fun apiRequests(data: String):List<Document> {
+        println(data)
         dao = mongoTemplate?.let { Dao(it) }
         val jsonData = JSONObject(data)
         val query = Document()
         query["category"] = jsonData.getString("category")
+        query["product"]=jsonData.getString("product")
         var dbQuotes=JSONArray()
         //val quotes= JSONArray()
         var quotes: MutableList<Document> = ArrayList<Document>()
@@ -85,6 +103,7 @@ class Service {
 
                     postOkHttp(inputData, curPartner)
                 }
+
                 val headers = curPartner.getJSONObject("api").getJSONArray("headers")
                 for (i in 0 until headers.length()) {
                     val header = headers.getJSONObject(i)
@@ -112,7 +131,7 @@ class Service {
 
         }
         jsonData.put("quotes", dbQuotes)
-        kafkaTemplate?.send("pipe",jsonData.toString())
+        kafkaTemplate?.send("pipe", "quote,$jsonData")
         dao?.insert("quotes", Document.parse(jsonData.toString()))
         return quotes
     }
@@ -206,6 +225,7 @@ class Service {
                     ""
                 }
                 .collect(Collectors.joining(combine1, partner.getJSONObject("api")["path"].toString() + combine2, ""))
+        print("URL")
         println(encodedURL)
         request = Request.Builder().url(encodedURL)
         request = request.get()
