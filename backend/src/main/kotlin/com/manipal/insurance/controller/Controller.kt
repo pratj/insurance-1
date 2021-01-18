@@ -48,13 +48,18 @@ class Controller {
         chargeRequest.setAmount(jsonData.getInt("amount"))
         chargeRequest.setStripeToken(jsonData.getJSONObject("token").getString("id"))
         chargeRequest.setCurrency("INR")
+        var result=JSONObject()
 
         val charge = paymentsService!!.charge(chargeRequest)
         model.addAttribute("id", charge.id)
+        result.put("id",charge.id)
         model.addAttribute("status", charge.status)
+        result.put("status",charge.status)
         model.addAttribute("chargeId", charge.id)
+        result.put("balance_transcation",charge.balanceTransaction)
         model.addAttribute("balance_transaction", charge.balanceTransaction)
-        //jsonData
+        jsonData.put("result",result)
+        dao?.insert("payment",Document.parse(jsonData.toString()))
         return model
     }
 
