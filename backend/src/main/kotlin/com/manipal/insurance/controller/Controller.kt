@@ -2,7 +2,11 @@ package com.manipal.insurance.controller
 
 
 import com.manipal.insurance.dao.Dao
+import com.manipal.insurance.model.ChargeRequest
 import com.manipal.insurance.service.Service
+import com.manipal.insurance.service.StripeService
+import com.stripe.exception.StripeException
+import org.springframework.ui.Model;
 import org.bson.Document
 import org.json.JSONArray
 import org.json.JSONException
@@ -14,6 +18,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.*
+import java.util.*
+
 
 @RestController
 @RequestMapping("/api")
@@ -27,6 +33,39 @@ class Controller {
     @Autowired
     var service: Service? = null
     var dao: Dao? = null
+
+    @Autowired
+    private val paymentsService: StripeService? = null
+
+    @PostMapping("/charge")
+    @Throws(StripeException::class)
+    fun charge(chargeRequest: ChargeRequest, model: Model): String? {
+        var jsonData=JSONObject()
+        jsonData.put("category",chargeRequest.category)
+        jsonData.put("product",chargeRequest.product)
+        jsonData.put("partner",chargeRequest.partner)
+        jsonData.put("amount",chargeRequest.amount)
+        jsonData.put("address",chargeRequest.address)
+        var tokenData=JSONObject(chargeRequest.token)
+        jsonData.put("email",tokenData.getString("email"))
+        chargeRequest.description="Example charge"
+
+        chargeRequest.currency="INR"
+
+        val charge = paymentsService!!.charge(chargeRequest)
+        model.addAttribute("id", charge.id)
+        model.addAttribute("status", charge.status)
+        model.addAttribute("chargeId", charge.id)
+        model.addAttribute("balance_transaction", charge.balanceTransaction)
+        //jsonData
+        return "result"
+    }
+
+    @ExceptionHandler(StripeException::class)
+    fun handleError(model: Model, ex: StripeException): String? {
+        model.addAttribute("error", ex.message)
+        return "result"
+    }
 
     @PostMapping("/configs")
     fun addAllConfigs(@RequestBody data: String?): ResponseEntity<String?> {
