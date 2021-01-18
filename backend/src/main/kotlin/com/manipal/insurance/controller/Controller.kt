@@ -6,7 +6,6 @@ import com.manipal.insurance.model.ChargeRequest
 import com.manipal.insurance.service.Service
 import com.manipal.insurance.service.StripeService
 import com.stripe.exception.StripeException
-import org.springframework.ui.Model;
 import org.bson.Document
 import org.json.JSONArray
 import org.json.JSONException
@@ -17,6 +16,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -39,18 +39,15 @@ class Controller {
 
     @PostMapping("/charge")
     @Throws(StripeException::class)
-    fun charge(chargeRequest: ChargeRequest, model: Model): String? {
-        var jsonData=JSONObject()
-        jsonData.put("category",chargeRequest.category)
-        jsonData.put("product",chargeRequest.product)
-        jsonData.put("partner",chargeRequest.partner)
-        jsonData.put("amount",chargeRequest.amount)
-        jsonData.put("address",chargeRequest.address)
-        var tokenData=JSONObject(chargeRequest.token)
-        jsonData.put("email",tokenData.getString("email"))
-        chargeRequest.description="Example charge"
+    fun charge(@RequestBody data: String, model: Model):Model? {
 
-        chargeRequest.currency="INR"
+        var jsonData=JSONObject(data)
+        var chargeRequest:ChargeRequest=ChargeRequest()
+        chargeRequest.setStripeEmail(jsonData.getJSONObject("token").getString("email"))
+        chargeRequest.setDescription("Example charge")
+        chargeRequest.setAmount(jsonData.getInt("amount"))
+        chargeRequest.setStripeToken(jsonData.getJSONObject("token").getString("id"))
+        chargeRequest.setCurrency("INR")
 
         val charge = paymentsService!!.charge(chargeRequest)
         model.addAttribute("id", charge.id)
@@ -58,13 +55,13 @@ class Controller {
         model.addAttribute("chargeId", charge.id)
         model.addAttribute("balance_transaction", charge.balanceTransaction)
         //jsonData
-        return "result"
+        return model
     }
 
     @ExceptionHandler(StripeException::class)
-    fun handleError(model: Model, ex: StripeException): String? {
+    fun handleError(model: Model, ex: StripeException): Model? {
         model.addAttribute("error", ex.message)
-        return "result"
+        return model
     }
 
     @PostMapping("/configs")

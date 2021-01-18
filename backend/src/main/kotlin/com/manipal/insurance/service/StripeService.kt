@@ -20,10 +20,10 @@ class StripeService {
     @Throws(AuthenticationException::class, InvalidRequestException::class, APIConnectionException::class, CardException::class, APIException::class)
     fun charge(chargeRequest: ChargeRequest): Charge {
         val chargeParams: MutableMap<String, Any> = HashMap()
-        chargeParams["amount"] = chargeRequest.amount
-        chargeParams["currency"] = chargeRequest.currency
-        chargeParams["description"] = chargeRequest.description
-        chargeParams["source"] = chargeRequest.token
+        chargeParams["amount"] = chargeRequest.getAmount()
+        chargeParams["currency"] = chargeRequest.getCurrency()
+        chargeParams["description"] = chargeRequest.getDescription()
+        chargeParams["source"] = chargeRequest.getStripeToken()
         return Charge.create(chargeParams)
     }
 }
