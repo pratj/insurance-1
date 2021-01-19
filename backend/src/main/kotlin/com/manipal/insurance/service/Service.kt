@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 import kotlin.collections.List
 import kotlin.collections.Map
 import kotlin.collections.MutableList
@@ -49,6 +50,22 @@ class Service {
         fields["image"] = 1
         return dao?.findFields("formConfig", fields)
 
+    }
+    fun findUserLocation(): List<Document>? {
+        dao = mongoTemplate?.let { Dao(it)}
+        val multiIdMap: MutableMap<String, Any> = HashMap()
+        var project=Document()
+        project["_id"]=0
+        project["category"]=1
+        project["partner"]=1
+        project["email"]=1
+        project["userLocation"]=1
+        project["time"]=1
+        project["product"]=1
+        var query=Document()
+        query["userLocation.userAllowed"]=true
+        query["result.status"]="succeeded"
+        return dao?.findFields("payment",query,project)
     }
     fun partnerPaymentCount(): MutableList<Document> {
         dao= mongoTemplate?.let { Dao(it) }

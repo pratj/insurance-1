@@ -71,7 +71,10 @@ return service?.partnerPaymentCount()
         return ResponseEntity<String?>(result.toString(), headers, HttpStatus.OK)
         //return model
     }
-
+    @GetMapping("/map/location")
+    fun mapLocation():List<Document>?{
+        return service?.findUserLocation()
+    }
     @ExceptionHandler(StripeException::class)
     fun handleError(model: Model, ex: StripeException): Model? {
         model.addAttribute("error", ex.message)
