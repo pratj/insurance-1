@@ -36,7 +36,10 @@ class Controller {
 
     @Autowired
     private val paymentsService: StripeService? = null
-
+    @GetMapping("/category/partner/payment/count")
+    fun paymentPartnerCount(): JSONArray? {
+return service?.partnerPaymentCount()
+    }
     @PostMapping("/charge")
     @Throws(StripeException::class)
     fun charge(@RequestBody data: String, model: Model):Model? {
@@ -49,7 +52,8 @@ class Controller {
         chargeRequest.setStripeToken(jsonData.getJSONObject("token").getString("id"))
         chargeRequest.setCurrency("INR")
         var result=JSONObject()
-
+    jsonData.put("email",jsonData.getJSONObject("token").getString("email"))
+        jsonData.remove("token")
         val charge = paymentsService!!.charge(chargeRequest)
         model.addAttribute("id", charge.id)
         result.put("id",charge.id)
