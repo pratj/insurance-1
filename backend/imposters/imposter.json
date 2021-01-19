@@ -1,0 +1,190 @@
+{
+  "port": 9000,
+  "protocol": "http",
+  "stubs": [
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "6700",
+              "idv": "93000",
+              "benefits": "theft insurance"
+            }
+          }
+        },{
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "6900",
+              "idv": "98000",
+              "benefits": "theft insurance,key replacement"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "path": "/motor-insurance/car-insurance/tata-aig/quote/",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "6900",
+              "idv": "93000",
+              "benefits": "theft insurance"
+            }
+          }
+        },{
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "7000",
+              "idv": "98000",
+              "benefits": "theft insurance,key replacement"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "path": "http://localhost:9000/motor-insurance/car-insurance/bajaj-allianz/quote",
+            "method": "GET"
+          }
+        }
+      ]
+    },{
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "6900",
+              "idv": "93000",
+              "benefits": "theft insurance"
+            }
+          }
+        },{
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "7000",
+              "idv": "98000",
+              "benefits": "theft insurance,key replacement"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "path": "/motor-insurance/car-insurance/bajaj-allianz/quote",
+            "method": "GET"
+          }
+        }
+      ]
+    },{
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "6900",
+              "ratings": "3/5",
+              "benefits": "24*7 security"
+            }
+          }
+        },{
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "7000",
+              "ratings": "4.5/5",
+              "benefits": "24*7 security,ticket cancellation claim"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "path": "/travel-insurance/overseas-insurance/tata-aig/quote",
+            "method": "POST"
+          }
+        }
+      ]
+    },
+    {
+      "responses": [
+        {
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "3500",
+              "rating": "3/5",
+              "benefits": "24*7 security"
+            }
+          }
+        },{
+          "is": {
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json"
+            },
+            "body": {
+              "value": "3000",
+              "ratings": "4.5/5",
+              "benefits": "24*7 security,ticket cancellation claim"
+            }
+          }
+        }
+      ],
+      "predicates": [
+        {
+          "contains": {
+            "path": "/travel-insurance/overseas-insurance/bajaj-allianz/quote",
+            "method": "POST"
+          }
+        }
+      ]
+    }
+
+  ]
+}

@@ -1,0 +1,226 @@
+[
+  {
+    "category": "Motor Insurance",
+    "product": "Car Insurance",
+    "info": "",
+    "image": "https://images.moneycontrol.com/static-mcnews/2018/03/car-insurance-770x433.jpg",
+    "fields": [
+      {
+        "name": "vehicleNo",
+        "label": "Vehicle Number",
+        "type": "text",
+        "placeholder": "Enter Vehicle Number"
+      },
+      {
+        "name": "fullName",
+        "label": "Full Name",
+        "type": "text",
+        "placeholder": "Enter FullName"
+      },
+      {
+        "name": "email",
+        "label": "Email",
+        "type": "email",
+        "placeholder": "Enter Email Id"
+      },
+      {
+        "name": "mobileNo",
+        "label": "Mobile Number",
+        "type": "tel",
+        "placeholder": "Enter Mobile Number"
+      }
+    ],
+    "partners": [
+      {
+        "partner": "Tata AIG",
+        "image": "https://www.tataaig.com/logo.png",
+        "api": {
+          "path": "http://localhost:9000/motor-insurance/car-insurance/tata-aig/quote/",
+          "method": "GET",
+          "uriType": "/",
+          "headers": []
+        },
+        "inputField": [
+          {
+            "from": "vehicleNo",
+            "to": "regNo"
+          },
+          {
+            "from": "fullName",
+            "to": "fullName"
+          },
+          {
+            "from": "email",
+            "to": "email"
+          },
+          {
+            "from": "mobileNo",
+            "to": "mobileNo"
+          }
+        ],
+        "outputField": [
+          {
+            "from": "value",
+            "to": "quote"
+          },
+          {
+            "from": "idv",
+            "to": "IDV"
+          },
+          {
+            "from": "benefits",
+            "to": "others"
+          }
+        ]
+      },
+      {
+        "partner": "Bajaj Allianz",
+        "image": "https://m.economictimes.com/thumb/height-450,width-600,imgsize-145233,msid-73152868/bajaj-allianz-general-insurance.jpg",
+        "api": {
+          "path": "http://localhost:9000/motor-insurance/car-insurance/bajaj-allianz/quote",
+          "method": "GET",
+          "uriType": "?",
+          "headers": []
+        },
+        "inputField": [
+          {
+            "from": "vehicleNo",
+            "to": "regNo"
+          },
+          {
+            "from": "fullName",
+            "to": "fullName"
+          },
+          {
+            "from": "email",
+            "to": "email"
+          },
+          {
+            "from": "mobileNo",
+            "to": "mobileNo"
+          }
+        ],
+        "outputField": [
+          {
+            "from": "value",
+            "to": "quote"
+          },
+          {
+            "from": "idv",
+            "to": "IDV"
+          },
+          {
+            "from": "benefits",
+            "to": "others"
+          }
+        ]
+      }
+
+    ]
+  },
+  {
+    "category": "Travel Insurance",
+    "product": "Overseas Travel Insurance",
+    "info": "",
+    "image": "https://www.shriramgi.com/images/travelproductbg.jpg",
+    "fields": [
+      {
+        "name": "destination",
+        "label": "Travelling To",
+        "type": "select",
+        "placeholder": "Destination"
+      },
+      {
+        "name": "startDate",
+        "label": "Trip Start Date",
+        "type": "date",
+        "placeholder": ""
+      },
+      {
+        "name": "endDate",
+        "label": "Trip End Date",
+        "type": "date",
+        "placeholder": ""
+      }
+    ],
+    "partners": [
+      {
+        "partner": "Tata AIG",
+        "image": "https://www.tataaig.com/logo.png",
+        "api": {
+          "path": "http://localhost:9000/travel-insurance/overseas-insurance/tata-aig/quote",
+          "method": "POST",
+          "uriType": "/",
+          "headers": []
+        },
+        "inputField": [
+          {
+            "from": "destination",
+            "to": "destination"
+          },
+          {
+            "from": "startDate",
+            "to": "tripStartDate"
+          },
+          {
+            "from": "endDate",
+            "to": "tripEndDate"
+          }
+        ],
+        "outputField": [
+          {
+            "from": "value",
+            "to": "quote"
+          },
+          {
+            "from": "rating",
+            "to": "ratings"
+          },
+          {
+            "from": "benefits",
+            "to": "others"
+          }
+        ]
+      },
+      {
+        "partner": "Bajaj Allianz",
+        "image": "https://m.economictimes.com/thumb/height-450,width-600,imgsize-145233,msid-73152868/bajaj-allianz-general-insurance.jpg",
+        "api": {
+          "path": "http://localhost:9000/travel-insurance/overseas-insurance/bajaj-allianz/quote",
+          "method": "GET",
+          "uriType": "/",
+          "headers": []
+        },
+        "inputField": [
+          {
+            "from": "destination",
+            "to": "destination"
+          },
+          {
+            "from": "startDate",
+            "to": "startDate"
+          },
+          {
+            "from": "endDate",
+            "to": "endDate"
+          }
+        ],
+        "outputField": [
+          {
+            "from": "value",
+            "to": "quote"
+          },
+          {
+            "from": "ratings",
+            "to": "ratings"
+          },
+          {
+            "from": "benefits",
+            "to": "others"
+          }
+        ]
+      }
+
+    ]
+  }
+]

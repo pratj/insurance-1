@@ -1,0 +1,5 @@
+1.find different types category,product
+2.find  users requested for category,product
+3.calculate A(i)-A(j) where A(i) is users for i and i=category(i),product(i),A(j) is users for j and j=category(j),product(j)
+4.input category,product
+5.return all category,product where A(i)-A(j)>60 where i=category,product
