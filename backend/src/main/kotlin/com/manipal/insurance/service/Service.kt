@@ -226,6 +226,7 @@ class Service {
 
         }
         jsonData.put("quotes", dbQuotes)
+        jsonData.put("time",Date())
         kafkaTemplate?.send("pipe", "quote,$jsonData")
         dao?.insert("quotes", Document.parse(jsonData.toString()))
         return quotes
