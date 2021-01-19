@@ -36,7 +36,7 @@ class ChargeRequest {
         this.stripeToken=stripeToken
     }
     fun setAmount(amount:Int){
-        this.amount=amount
+        this.amount=amount*100
     }
     fun setStripeEmail(stripeEmail:String){
         this.stripeEmail=stripeEmail

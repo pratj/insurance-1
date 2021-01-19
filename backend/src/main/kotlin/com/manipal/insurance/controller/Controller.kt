@@ -42,9 +42,11 @@ return service?.partnerPaymentCount()
     }
     @PostMapping("/charge")
     @Throws(StripeException::class)
-    fun charge(@RequestBody data: String, model: Model):Model? {
+    fun charge(@RequestBody data: String, model: Model): ResponseEntity<String?> {
 
         var jsonData=JSONObject(data)
+        jsonData=jsonData.getJSONObject("data")
+
         var chargeRequest:ChargeRequest=ChargeRequest()
         chargeRequest.setStripeEmail(jsonData.getJSONObject("token").getString("email"))
         chargeRequest.setDescription("Example charge")
@@ -52,8 +54,7 @@ return service?.partnerPaymentCount()
         chargeRequest.setStripeToken(jsonData.getJSONObject("token").getString("id"))
         chargeRequest.setCurrency("INR")
         var result=JSONObject()
-    jsonData.put("email",jsonData.getJSONObject("token").getString("email"))
-        jsonData.remove("token")
+
         val charge = paymentsService!!.charge(chargeRequest)
         model.addAttribute("id", charge.id)
         result.put("id",charge.id)
@@ -64,7 +65,11 @@ return service?.partnerPaymentCount()
         model.addAttribute("balance_transaction", charge.balanceTransaction)
         jsonData.put("result",result)
         dao?.insert("payment",Document.parse(jsonData.toString()))
-        return model
+        println("Result >>>>$result")
+        val headers = HttpHeaders()
+        headers.add("Response-from", "payment")
+        return ResponseEntity<String?>(result.toString(), headers, HttpStatus.OK)
+        //return model
     }
 
     @ExceptionHandler(StripeException::class)
