@@ -14,13 +14,21 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.data.mongodb.core.aggregation.Fields
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
+import java.util.*
 import java.util.stream.Collectors
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.Map
+import kotlin.collections.MutableList
+import kotlin.collections.MutableMap
+import kotlin.collections.isNotEmpty
+import kotlin.collections.set
+
 
 @Service
 class Service {
@@ -42,21 +50,23 @@ class Service {
         return dao?.findFields("formConfig", fields)
 
     }
-    fun partnerPaymentCount():JSONArray{
+    fun partnerPaymentCount(): MutableList<Document> {
         dao= mongoTemplate?.let { Dao(it) }
         var list: MutableList<Bson> = ArrayList<Bson>()
+        val multiIdMap: MutableMap<String, Any> = HashMap()
+        multiIdMap["partner"] = "\$partner"
+        multiIdMap["category"] = "\$category"
 
-        list.add(Aggregates.group(Fields.fields()
-                .and("category")
-                .and("partner").to, Accumulators.sum("count", 1)))
+        val groupFields = Document(multiIdMap)
+        list.add(Aggregates.group(groupFields, Accumulators.sum("count", 1)))
         var project=Document()
-        project["_id"]=1
+        project["_id"]=0
         project["category"]="\$_id.category"
         project["partner"]="\$_id.partner"
         project["count"]=1
         list.add(Aggregates.project(project))
         var result=JSONArray()
-        var dbOutput=dao?.aggregate("payment",list)
+        var dbOutput=dao?.aggregate("payment", list)
         if (dbOutput != null) {
             for(output in dbOutput){
                 print(output)
@@ -67,8 +77,8 @@ class Service {
                         jsonOutput.remove("category")
                         var res1=result.getJSONObject(i)
                         var res=result.getJSONObject(i).getJSONArray("partners").put(jsonOutput)
-                        res1.put("partners",res)
-                        result.put(i,res1)
+                        res1.put("partners", res)
+                        result.put(i, res1)
                         flag=false
                     }
                     if(!flag){
@@ -78,14 +88,18 @@ class Service {
                 }
                 if(flag){
                     var res=JSONObject()
-                    res.put("category",jsonOutput.getString("category"))
+                    res.put("category", jsonOutput.getString("category"))
                     jsonOutput.remove("category")
-                    res.put("partners",JSONArray().put(jsonOutput))
+                    res.put("partners", JSONArray().put(jsonOutput))
                     result.put(res)
                 }
             }
         }
-        return result
+        var resultFormat:MutableList<Document> = ArrayList<Document>()
+        for(i in 0 until result.length()){
+            resultFormat.add(Document.parse(result.getJSONObject(i).toString()))
+        }
+        return resultFormat
 
     }
     fun addPartner(data: String){
@@ -95,7 +109,7 @@ class Service {
         query["category"] = jsonData.getString("category")
         query["product"]=jsonData.getString("product")
         query["partner"]=jsonData.getString("partner")
-        var partners=dao?.find("partners",query)
+        var partners=dao?.find("partners", query)
         var flag=true
         if (partners != null) {
             if (partners.isNotEmpty()) {
@@ -192,7 +206,7 @@ class Service {
         project["category"]="\$_id"
         project["partnerCount"]=1
         list.add(Aggregates.project(project))
-        return dao?.aggregate("partners",list)
+        return dao?.aggregate("partners", list)
         //return Document.parse(output.toString())
     }
     fun partnerCategoryCount():List<Document>? {
@@ -204,7 +218,7 @@ class Service {
         project["partner"]="\$_id"
         project["count"]=1
         list.add(Aggregates.project(project))
-        return dao?.aggregate("partners",list)
+        return dao?.aggregate("partners", list)
         //return Document.parse(output.toString())
     }
     fun categoryRequests():List<Document>? {
@@ -216,7 +230,7 @@ class Service {
         project["category"]="\$_id"
         project["count"]=1
         list.add(Aggregates.project(project))
-        return dao?.aggregate("quotes",list)
+        return dao?.aggregate("quotes", list)
         //return Document.parse(output.toString())
     }
     fun mapOFields(data: JSONObject, map: JSONArray): JSONObject {

@@ -37,7 +37,7 @@ class Controller {
     @Autowired
     private val paymentsService: StripeService? = null
     @GetMapping("/category/partner/payment/count")
-    fun paymentPartnerCount(): JSONArray? {
+    fun paymentPartnerCount(): MutableList<Document>? {
 return service?.partnerPaymentCount()
     }
     @PostMapping("/charge")
