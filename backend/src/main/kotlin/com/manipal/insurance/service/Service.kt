@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.manipal.insurance.dao.Dao
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
+import com.mongodb.client.model.Field
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -51,6 +52,15 @@ class Service {
         return dao?.findFields("formConfig", fields)
 
     }
+    fun deleteFormConfig(category: String,product: String): String {
+        dao = mongoTemplate?.let { Dao(it) }
+        val query=Document()
+        query["category"]=category
+        query["product"]=product
+        dao?.delete("formConfig",query)
+        dao?.delete("partners",query)
+        return "successfull"
+    }
     fun findUserLocation(): List<Document>? {
         dao = mongoTemplate?.let { Dao(it)}
         val multiIdMap: MutableMap<String, Any> = HashMap()
@@ -63,9 +73,16 @@ class Service {
         project["time"]=1
         project["product"]=1
         var query=Document()
-        query["userLocation.userAllowed"]=true
-        query["result.status"]="succeeded"
-        return dao?.findFields("payment",query,project)
+        //query["userLocation.userAllowed"]=true
+        query["result.status"]="succeded"
+        var addField=Document()
+        addField["userBought"]=true
+        var list: MutableList<Bson> = ArrayList<Bson>()
+        list.add(Aggregates.project(project))
+        list.add(Aggregates.match(query))
+        var field=Field("userBought",true)
+        list.add(Aggregates.addFields(field))
+        return dao?.aggregate("payment",list)
     }
     fun partnerPaymentCount(): MutableList<Document> {
         dao= mongoTemplate?.let { Dao(it) }

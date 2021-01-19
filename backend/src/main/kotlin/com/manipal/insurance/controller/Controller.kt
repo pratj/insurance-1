@@ -75,6 +75,10 @@ return service?.partnerPaymentCount()
     fun mapLocation():List<Document>?{
         return service?.findUserLocation()
     }
+    @DeleteMapping("/category/{category}/product/{product}")
+    fun deleteFormConfig(@RequestParam category: String,@RequestParam product: String): String? {
+        return service?.deleteFormConfig(category,product)
+    }
     @ExceptionHandler(StripeException::class)
     fun handleError(model: Model, ex: StripeException): Model? {
         model.addAttribute("error", ex.message)
