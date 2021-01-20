@@ -52,40 +52,76 @@ class Service {
         return dao?.findFields("formConfig", fields)
 
     }
-    fun deleteFormConfig(category: String,product: String): String {
+
+    fun deleteFormConfig(category: String, product: String): String {
         dao = mongoTemplate?.let { Dao(it) }
-        val query=Document()
-        query["category"]=category
-        query["product"]=product
-        dao?.delete("formConfig",query)
-        dao?.delete("partners",query)
+        val query = Document()
+        query["category"] = category
+        query["product"] = product
+        dao?.delete("formConfig", query)
+        dao?.delete("partners", query)
         return "successfull"
     }
+
     fun findUserLocation(): List<Document>? {
-        dao = mongoTemplate?.let { Dao(it)}
+        dao = mongoTemplate?.let { Dao(it) }
         val multiIdMap: MutableMap<String, Any> = HashMap()
-        var project=Document()
-        project["_id"]=0
-        project["category"]=1
-        project["partner"]=1
-        project["email"]=1
-        project["userLocation"]=1
-        project["time"]=1
-        project["product"]=1
-        var query=Document()
-        //query["userLocation.userAllowed"]=true
-        query["result.status"]="succeded"
-        var addField=Document()
-        addField["userBought"]=true
+        var project = Document()
+        project["_id"] = 0
+        project["category"] = 1
+        project["partner"] = 1
+        project["userLocation"] = 1
+        project["ViewTime"] = "\$time"
+        project["product"] = 1
+        var query = Document()
+        query["userLocation.userAllowed"] = true
+        query["result.status"] = "succeeded"
+        var addField = Document()
+        addField["userBought"] = true
         var list: MutableList<Bson> = ArrayList<Bson>()
         list.add(Aggregates.project(project))
         list.add(Aggregates.match(query))
-        var field=Field("userBought",true)
+        var field = Field("userBought", true)
         list.add(Aggregates.addFields(field))
-        return dao?.aggregate("payment",list)
+        var paid = dao?.aggregate("payment", list)
+        list.add(Aggregates.lookup("payment", "category", "category", "category"))
+        list.add(Aggregates.lookup("payment", "product", "product", "product"))
+        list.add(Aggregates.lookup("payment", "formdata.email", "email", "email"))
+        query = Document()
+        query["userLocation.userAllowed"] = true
+        var subQuery = Document()
+        subQuery["\$exists"] = true
+        subQuery["\$eq"] = ArrayList<Bson>()
+        query["email"] = subQuery
+        list = ArrayList<Bson>()
+        project = Document()
+        project["_id"] = 0
+        project["category"] = 1
+        project["product"] = 1
+        project["ViewTime"] = "\$time"
+        project["userLocation"] = 1
+        print(query)
+        list.add(Aggregates.match(query))
+        list.add(Aggregates.project(project))
+        list.add(Aggregates.addFields(Field("userBought", false)))
+        var notPaid = dao?.aggregate("quotes", list)
+        var output = ArrayList<Document>()
+        if (notPaid != null) {
+            for (i in notPaid.indices) {
+                output.add(notPaid[i])
+
+            }
+        }
+        if (paid != null) {
+            for (i in paid.indices) {
+                output.add(paid[i])
+            }
+        }
+        return output
     }
+
     fun partnerPaymentCount(): MutableList<Document> {
-        dao= mongoTemplate?.let { Dao(it) }
+        dao = mongoTemplate?.let { Dao(it) }
         var list: MutableList<Bson> = ArrayList<Bson>()
         val multiIdMap: MutableMap<String, Any> = HashMap()
         multiIdMap["partner"] = "\$partner"
@@ -93,35 +129,35 @@ class Service {
 
         val groupFields = Document(multiIdMap)
         list.add(Aggregates.group(groupFields, Accumulators.sum("count", 1)))
-        var project=Document()
-        project["_id"]=0
-        project["category"]="\$_id.category"
-        project["partner"]="\$_id.partner"
-        project["count"]=1
+        var project = Document()
+        project["_id"] = 0
+        project["category"] = "\$_id.category"
+        project["partner"] = "\$_id.partner"
+        project["count"] = 1
         list.add(Aggregates.project(project))
-        var result=JSONArray()
-        var dbOutput=dao?.aggregate("payment", list)
+        var result = JSONArray()
+        var dbOutput = dao?.aggregate("payment", list)
         if (dbOutput != null) {
-            for(output in dbOutput){
+            for (output in dbOutput) {
                 print(output)
-                var jsonOutput=JSONObject(output.toJson())
-                var flag=true
-                for(i in 0 until result.length()){
-                    if(jsonOutput.getString("category")==result.getJSONObject(i).getString("category")){
+                var jsonOutput = JSONObject(output.toJson())
+                var flag = true
+                for (i in 0 until result.length()) {
+                    if (jsonOutput.getString("category") == result.getJSONObject(i).getString("category")) {
                         jsonOutput.remove("category")
-                        var res1=result.getJSONObject(i)
-                        var res=result.getJSONObject(i).getJSONArray("partners").put(jsonOutput)
+                        var res1 = result.getJSONObject(i)
+                        var res = result.getJSONObject(i).getJSONArray("partners").put(jsonOutput)
                         res1.put("partners", res)
                         result.put(i, res1)
-                        flag=false
+                        flag = false
                     }
-                    if(!flag){
+                    if (!flag) {
                         break
                     }
 
                 }
-                if(flag){
-                    var res=JSONObject()
+                if (flag) {
+                    var res = JSONObject()
                     res.put("category", jsonOutput.getString("category"))
                     jsonOutput.remove("category")
                     res.put("partners", JSONArray().put(jsonOutput))
@@ -129,22 +165,23 @@ class Service {
                 }
             }
         }
-        var resultFormat:MutableList<Document> = ArrayList<Document>()
-        for(i in 0 until result.length()){
+        var resultFormat: MutableList<Document> = ArrayList<Document>()
+        for (i in 0 until result.length()) {
             resultFormat.add(Document.parse(result.getJSONObject(i).toString()))
         }
         return resultFormat
 
     }
-    fun addPartner(data: String){
+
+    fun addPartner(data: String) {
         dao = mongoTemplate?.let { Dao(it) }
-        var jsonData=JSONObject(data)
+        var jsonData = JSONObject(data)
         val query = Document()
         query["category"] = jsonData.getString("category")
-        query["product"]=jsonData.getString("product")
-        query["partner"]=jsonData.getString("partner")
-        var partners=dao?.find("partners", query)
-        var flag=true
+        query["product"] = jsonData.getString("product")
+        query["partner"] = jsonData.getString("partner")
+        var partners = dao?.find("partners", query)
+        var flag = true
         if (partners != null) {
             if (partners.isNotEmpty()) {
                 flag = false
@@ -159,6 +196,7 @@ class Service {
         }
         dao?.insert("partners", Document.parse(jsonData.toString()))
     }
+
     fun findFormConfig(category: String, product: String): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
         val query = Document()
@@ -173,14 +211,14 @@ class Service {
         return URLEncoder.encode(value, StandardCharsets.UTF_8.toString())
     }
 
-    fun apiRequests(data: String):List<Document> {
+    fun apiRequests(data: String): List<Document> {
         println(data)
         dao = mongoTemplate?.let { Dao(it) }
         val jsonData = JSONObject(data)
         val query = Document()
         query["category"] = jsonData.getString("category")
-        query["product"]=jsonData.getString("product")
-        var dbQuotes=JSONArray()
+        query["product"] = jsonData.getString("product")
+        var dbQuotes = JSONArray()
         //val quotes= JSONArray()
         var quotes: MutableList<Document> = ArrayList<Document>()
 
@@ -212,9 +250,9 @@ class Service {
                 val call = request?.let { client.newCall(it.build()) }
                 val response = call?.execute()
                 val resData = response?.body()!!.string()
-                var res=mapOFields(JSONObject(resData), curPartner.getJSONArray("outputField"))
+                var res = mapOFields(JSONObject(resData), curPartner.getJSONArray("outputField"))
                 println(curPartner.getString("partner"))
-                var quote=JSONObject()
+                var quote = JSONObject()
                 quote.put("partner", curPartner.getString("partner"))
                 quote.put("image", curPartner.getString("image"))
                 quote.put("quote", res)
@@ -226,48 +264,52 @@ class Service {
 
         }
         jsonData.put("quotes", dbQuotes)
-        jsonData.put("time",Date())
+        jsonData.put("time", Date())
         kafkaTemplate?.send("pipe", "quote,$jsonData")
         dao?.insert("quotes", Document.parse(jsonData.toString()))
         return quotes
     }
-    fun categoryPartnersCount():List<Document>? {
+
+    fun categoryPartnersCount(): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
         var list: MutableList<Bson> = ArrayList<Bson>()
 
         list.add(Aggregates.group("\$category", Accumulators.sum("partnerCount", 1)))
-        var project=Document()
-        project["_id"]=0
-        project["category"]="\$_id"
-        project["partnerCount"]=1
+        var project = Document()
+        project["_id"] = 0
+        project["category"] = "\$_id"
+        project["partnerCount"] = 1
         list.add(Aggregates.project(project))
         return dao?.aggregate("partners", list)
         //return Document.parse(output.toString())
     }
-    fun partnerCategoryCount():List<Document>? {
+
+    fun partnerCategoryCount(): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
         var list: MutableList<Bson> = ArrayList<Bson>()
         list.add(Aggregates.group("\$partner", Accumulators.sum("count", 1)))
-        var project=Document()
-        project["_id"]=0
-        project["partner"]="\$_id"
-        project["count"]=1
+        var project = Document()
+        project["_id"] = 0
+        project["partner"] = "\$_id"
+        project["count"] = 1
         list.add(Aggregates.project(project))
         return dao?.aggregate("partners", list)
         //return Document.parse(output.toString())
     }
-    fun categoryRequests():List<Document>? {
+
+    fun categoryRequests(): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
         var list: MutableList<Bson> = ArrayList<Bson>()
         list.add(Aggregates.group("\$category", Accumulators.sum("count", 1)))
-        var project=Document()
-        project["_id"]=0
-        project["category"]="\$_id"
-        project["count"]=1
+        var project = Document()
+        project["_id"] = 0
+        project["category"] = "\$_id"
+        project["count"] = 1
         list.add(Aggregates.project(project))
         return dao?.aggregate("quotes", list)
         //return Document.parse(output.toString())
     }
+
     fun mapOFields(data: JSONObject, map: JSONArray): JSONObject {
 
         val output = JSONObject()
