@@ -65,7 +65,7 @@ class Dao(mongoTemplate: MongoTemplate) {
         }
     }
     fun aggregate(dbName: String,query:MutableList<Bson>): List<Document> {
-        print("no")
+        //print("no")
 
        return mongoTemplate.execute(dbName) { mongoCollection ->
 
@@ -74,6 +74,7 @@ class Dao(mongoTemplate: MongoTemplate) {
             var list1=mongoCollection.aggregate(query)
            //print("yes")
            //print(list1.toString())
+
            return@execute list1.toMutableList()
         }
     }

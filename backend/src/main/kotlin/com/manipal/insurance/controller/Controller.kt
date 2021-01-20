@@ -19,6 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @RestController
@@ -73,7 +74,7 @@ return service?.partnerPaymentCount()
         //return model
     }
     @GetMapping("/map/location")
-    fun mapLocation():List<Document>?{
+    fun mapLocation(): ArrayList<Document>? {
         return service?.findUserLocation()
     }
     @DeleteMapping("/category/{category}/product/{product}")

@@ -31,6 +31,9 @@ import kotlin.collections.MutableMap
 import kotlin.collections.isNotEmpty
 import kotlin.collections.set
 
+//import org.springframework.data.document.mongodb.query.Query;
+//import org.springframework.data.mongodb.core.query.Query
+//import org.springframework.data.mongodb.core.validation.Validator.document
 
 @Service
 class Service {
@@ -63,59 +66,96 @@ class Service {
         return "successfull"
     }
 
-    fun findUserLocation(): List<Document>? {
+    fun findUserLocation(): ArrayList<Document> {
         dao = mongoTemplate?.let { Dao(it) }
-        val multiIdMap: MutableMap<String, Any> = HashMap()
-        var project = Document()
-        project["_id"] = 0
-        project["category"] = 1
-        project["partner"] = 1
-        project["userLocation"] = 1
-        project["ViewTime"] = "\$time"
-        project["product"] = 1
-        var query = Document()
-        query["userLocation.userAllowed"] = true
-        query["result.status"] = "succeeded"
-        var addField = Document()
-        addField["userBought"] = true
-        var list: MutableList<Bson> = ArrayList<Bson>()
-        list.add(Aggregates.project(project))
-        list.add(Aggregates.match(query))
-        var field = Field("userBought", true)
-        list.add(Aggregates.addFields(field))
-        var paid = dao?.aggregate("payment", list)
-        list.add(Aggregates.lookup("payment", "category", "category", "category"))
-        list.add(Aggregates.lookup("payment", "product", "product", "product"))
-        list.add(Aggregates.lookup("payment", "formdata.email", "email", "email"))
-        query = Document()
-        query["userLocation.userAllowed"] = true
-        var subQuery = Document()
-        subQuery["\$exists"] = true
-        subQuery["\$eq"] = ArrayList<Bson>()
-        query["email"] = subQuery
-        list = ArrayList<Bson>()
-        project = Document()
-        project["_id"] = 0
-        project["category"] = 1
-        project["product"] = 1
-        project["ViewTime"] = "\$time"
-        project["userLocation"] = 1
-        print(query)
-        list.add(Aggregates.match(query))
-        list.add(Aggregates.project(project))
-        list.add(Aggregates.addFields(Field("userBought", false)))
-        var notPaid = dao?.aggregate("quotes", list)
-        var output = ArrayList<Document>()
-        if (notPaid != null) {
-            for (i in notPaid.indices) {
-                output.add(notPaid[i])
-
-            }
+        var paidQuery="{\n" +
+                "        aggregate: \"payment\",\n" +
+                "        pipeline: [\n" +
+                "\n" +
+                "            {\n" +
+                "                \"\$match\": {\n" +
+                "                    \"userLocation.userAllowed\": true,\n" +
+                "                    \"result.status\": \"succeeded\"\n" +
+                "                }\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"\$project\": {\n" +
+                "                    \"product\": 1,\n" +
+                "                    \"userLocation\": 1,\n" +
+                "                    \"_id\": 0,\n" +
+                "                    \"ViewTime\": \"\$time\",\n" +
+                "                    \"category\": 1\n" +
+                "                }\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"\$addFields\": {\n" +
+                "                    \"userBought\": true\n" +
+                "                }\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        cursor: {}\n" +
+                "    }"
+        var paidMembers=mongoTemplate?.executeCommand(paidQuery) as Document
+        var paidData= JSONObject(paidMembers.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
+        var nonPaidQuery="{\n" +
+                "    aggregate: \"quotes\",\n" +
+                "    pipeline: [\n" +
+                "        {\n" +
+                "            \"\$lookup\": {\n" +
+                "                \"from\": \"payment\",\n" +
+                "                \"localField\": \"category\",\n" +
+                "                \"foreignField\": \"category\",\n" +
+                "                \"as\": \"category\"\n" +
+                "            }\n" +
+                "            ,\n" +
+                "\n" +
+                "            \"\$lookup\": {\n" +
+                "                \"from\": \"payment\",\n" +
+                "                \"localField\": \"product\",\n" +
+                "                \"foreignField\": \"product\",\n" +
+                "                \"as\": \"product\"\n" +
+                "            }\n" +
+                "            ,\n" +
+                "            \"\$lookup\": {\n" +
+                "                \"localField\": \"formData.email\",\n" +
+                "                \"as\": \"email\",\n" +
+                "                \"foreignField\": \"email\",\n" +
+                "                \"from\": \"payment\"\n" +
+                "            }\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"\$match\": {\n" +
+                "                \"email\": {\n" +
+                "                    \"\$eq\": [],\n" +
+                "                    \"\$exists\": true\n" +
+                "                }, \"userLocation.userAllowed\": true\n" +
+                "            }\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"\$project\": {\n" +
+                "                \"product\": 1,\n" +
+                "                \"userLocation\": 1,\n" +
+                "                \"_id\": 0,\n" +
+                "                \"ViewTime\": \"\$time\",\n" +
+                "                \"category\": 1\n" +
+                "            }\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"\$addFields\": {\n" +
+                "                \"userBought\": false\n" +
+                "            }\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    cursor: {}\n" +
+                "}"
+        var nonPaidMembers=mongoTemplate?.executeCommand(nonPaidQuery) as Document
+        var nonPaidData= JSONObject(nonPaidMembers.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
+        var output=ArrayList<Document>()
+        for(i in 0 until paidData.length()){
+            output.add(Document.parse(paidData[i].toString()))
         }
-        if (paid != null) {
-            for (i in paid.indices) {
-                output.add(paid[i])
-            }
+        for(i in 0 until nonPaidData.length()){
+            output.add(Document.parse(nonPaidData[i].toString()))
         }
         return output
     }
