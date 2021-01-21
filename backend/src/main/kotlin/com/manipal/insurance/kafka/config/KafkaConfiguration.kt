@@ -14,7 +14,7 @@ class KafkaConfiguration {
     @Bean
     fun producerFactory(): ProducerFactory<String, String> {
         val configs: MutableMap<String, Any> = HashMap()
-        configs[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "127.0.0.1:9092"
+        configs[ProducerConfig.BOOTSTRAP_SERVERS_CONFIG] = "pkc-419q3.us-east4.gcp.confluent.cloud:9092"
         configs[ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         configs[ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG] = StringSerializer::class.java
         return DefaultKafkaProducerFactory(configs)

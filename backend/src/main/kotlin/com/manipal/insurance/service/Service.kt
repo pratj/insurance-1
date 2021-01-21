@@ -38,7 +38,10 @@ class Service {
     private val kafkaTemplate: KafkaTemplate<String, String>? = null
     var dao: Dao? = null
 
-
+    /*fun findMinMaxRequests():List<Document>?{
+        dao = mongoTemplate?.let { Dao(it) }
+        var query=""
+    }*/
     fun findUniqueCategory(): List<Document>? {
         dao = mongoTemplate?.let { Dao(it) }
         val fields = Document()
@@ -79,7 +82,7 @@ class Service {
                 "                    \"_id\": 1,\n" +
                 "                    \"ViewTime\": \"\$time\",\n" +
                 "                    \"category\": 1,\n" +
-                "                    \"product\": 1\n" +
+                "                    \"partner\": 1\n" +
                 "                }\n" +
                 "            },\n" +
                 "            {\n" +
@@ -146,11 +149,11 @@ class Service {
         var nonPaidMembers = mongoTemplate?.executeCommand(nonPaidQuery) as Document
         var nonPaidData = JSONObject(nonPaidMembers.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
         var output = ArrayList<Document>()
-        for (i in 0 until paidData.length()) {
-            output.add(Document.parse(paidData[i].toString()))
-        }
         for (i in 0 until nonPaidData.length()) {
             output.add(Document.parse(nonPaidData[i].toString()))
+        }
+        for (i in 0 until paidData.length()) {
+            output.add(Document.parse(paidData[i].toString()))
         }
         return output
     }
