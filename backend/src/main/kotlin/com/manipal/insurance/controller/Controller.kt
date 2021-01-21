@@ -44,7 +44,7 @@ return service?.partnerPaymentCount()
     @PostMapping("/charge")
     @Throws(StripeException::class)
     fun charge(@RequestBody data: String, model: Model): ResponseEntity<String?> {
-
+        dao = mongoTemplate?.let { Dao(it) }
         var jsonData=JSONObject(data)
         jsonData=jsonData.getJSONObject("data")
 
