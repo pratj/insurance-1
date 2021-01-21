@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.manipal.insurance.dao.Dao
 import com.mongodb.client.model.Accumulators
 import com.mongodb.client.model.Aggregates
-import com.mongodb.client.model.Field
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,11 +23,6 @@ import java.util.*
 import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
-import kotlin.collections.List
-import kotlin.collections.Map
-import kotlin.collections.MutableList
-import kotlin.collections.MutableMap
-import kotlin.collections.isNotEmpty
 import kotlin.collections.set
 
 //import org.springframework.data.document.mongodb.query.Query;
