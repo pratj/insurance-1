@@ -76,7 +76,7 @@ class Service {
                 "                \"\$project\": {\n" +
                 "                    \"product\": 1,\n" +
                 "                    \"userLocation\": 1,\n" +
-                "                    \"_id\": 0,\n" +
+                "                    \"_id\": 1,\n" +
                 "                    \"ViewTime\": \"\$time\",\n" +
                 "                    \"category\": 1,\n" +
                 "                    \"product\": 1\n" +
@@ -130,7 +130,7 @@ class Service {
                 "            \"\$project\": {\n" +
                 "                \"product\": 1,\n" +
                 "                \"userLocation\": 1,\n" +
-                "                \"_id\": 0,\n" +
+                "                \"_id\": 1,\n" +
                 "                \"ViewTime\": \"\$time\",\n" +
                 "                \"category\": 1\n" +
                 "            }\n" +
