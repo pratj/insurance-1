@@ -16,7 +16,8 @@ class KafkaConfiguration {
     @Bean
     fun consumerFactory(): ConsumerFactory<String, String> {
         val configs: MutableMap<String, Any> = HashMap()
-        configs[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = "127.0.0.1:9092"
+        configs[ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG] = "pkc-419q3.us-east4.gcp.confluent.cloud:9092"
+
         configs[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         configs[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         return DefaultKafkaConsumerFactory(configs)

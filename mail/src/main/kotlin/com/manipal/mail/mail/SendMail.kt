@@ -13,9 +13,10 @@ import javax.mail.internet.MimeMessage
 class SendMail {
     fun sendMail(to: String, subjects: String, messages: String) {
         Transport.send(plainMail(to, subjects, mjml(messages)))
+        //print("im done")
     }
     private fun mjml(mjmlTemplate: String):String{
-        println("mjml function")
+        //println("mjml function")
         val memoryAuthConf: MjmlAuth = MjmlAuthFactory.builder()
                 .withMemoryCredentials()
                 .mjmlCredentials("c49481d5-fe08-4819-bab8-26db50b9d01a", "dc2f0033-679d-4fb6-9dc6-5784bd5d6f2c")
@@ -24,22 +25,24 @@ class SendMail {
         val mjmlService: MjmlService = MjmlRestService(memoryAuthConf)
 
         val htmlData=mjmlService.transpileMjmlToHtml(mjmlTemplate)
-        println(htmlData)
+        //println(htmlData)
         return htmlData
     }
 
     private fun plainMail(to: String, subjects: String, messages: String): MimeMessage {
+        //print("plian")
         val tos = arrayListOf(to) //Multiple recipients
-        val from = "rashwinnonda@outlook.com" //Sender email
-        val password="rghu`ihROPQPXXV"
+        val from ="ibazaar40@gmail.com" //Sender email
+        val password="ngywfns67"
         val encryption: Encryption =Encryption()
         val properties = System.getProperties()
 
         with(properties) {
-            put("mail.smtp.host", "smtp-mail.outlook.com") //Configure smtp host
-            put("mail.smtp.port", "587") //Configure port
-            put("mail.smtp.starttls.enable", "true") //Enable TLS
-            put("mail.smtp.auth", "true") //Enable authentication
+            put("mail.smtp.host", "smtp.gmail.com");
+            put("mail.smtp.port", "465");
+            put("mail.smtp.auth", "true");
+            put("mail.smtp.socketFactory.port", "465");
+            put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         }
 
         val auth = object : Authenticator() {
@@ -59,7 +62,12 @@ class SendMail {
                 setContent(messages, "text/html; charset=utf-8") //Sending html message, you may change to send text here.
             }
         }
-
+        //print("message")
         return message
     }
+}
+
+fun main() {
+    var sendMail=SendMail()
+    sendMail.sendMail("rashwinnonda@gmail.com","qwe","qaseer")
 }

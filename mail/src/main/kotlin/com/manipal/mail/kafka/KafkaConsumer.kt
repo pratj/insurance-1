@@ -18,7 +18,7 @@ class KafkaConsumer {
     var dao: Dao? = null
     var emailPattern = Regex("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
 
-    @KafkaListener(topics = ["pipe"], groupId = "anything")
+    @KafkaListener(topics = ["pipe"], groupId = "mailer")
     fun consumer(messages: String) {
         dao = mongoTemplate?.let { Dao(it) }
         //println("Info Received$messages")
@@ -27,6 +27,7 @@ class KafkaConsumer {
         println("TYPE" + message[0])
         if (message[0] == "insurance") {
             var mails = getAllEmails()
+            //dao?.insert("formConfig", Document.parse(message[1]))
             if (mails != null) {
                 for (mail in mails) {
                     if (mail != null && emailPattern.matches(JSONObject(mail.toJson()).getString("email"))) {
@@ -38,6 +39,7 @@ class KafkaConsumer {
         }
         if (message[0] == "partner") {
             var mails = getAllEmails()
+            //dao?.insert("partners", Document.parse(message[1]))
             if (mails != null) {
                 for (mail in mails) {
                     if (mail != null && emailPattern.matches(JSONObject(mail.toJson()).getString("email"))) {
@@ -49,12 +51,12 @@ class KafkaConsumer {
             }
         }
         if (message[0] == "quote") {
-
-           service?.quoteMailer(message[1])
+            dao?.insert("quotes", Document.parse(message[1]))
+            service?.quoteMailer(message[1])
         }
         if ("suggest" in message[0]) {
 
-            service?.suggestionMailer(message[1].replace("\\\"","\""))
+            service?.suggestionMailer(message[1].replace("\\\"", "\""))
         }
     }
 

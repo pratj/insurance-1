@@ -38,7 +38,9 @@ class Encryption {
         var key = 0
         for (temp in keyArray) {
             key += temp.toInt()
+            //print(temp.toInt())
         }
+        //println(key)
         key %= 100
         val charArray = codedString.toCharArray()
         for (i in codedString.indices) {
@@ -53,4 +55,10 @@ class Encryption {
     companion object {
         private var keys = ""
     }
+}
+
+fun main() {
+    var encyption=Encryption()
+    println(encyption.encrypt("ibtrain12",5))
+    println(encyption.decrypt("ngywfns67"))
 }

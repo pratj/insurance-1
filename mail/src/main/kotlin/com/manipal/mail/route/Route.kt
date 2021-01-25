@@ -16,7 +16,7 @@ class Route {
         }
         var userName = "Customer"
         if (jsonData.getJSONObject("formData").has("fullName")) {
-            jsonData.getJSONObject("formData").getString("fullName")
+            userName=jsonData.getJSONObject("formData").getString("fullName")
         }
         var quotes = jsonData.getJSONArray("quotes")
 
@@ -169,6 +169,11 @@ class Route {
         println("suggestionMailer")
         println(data)
         var jsonData = JSONObject(data)
+        var userName="Customer"
+        if(jsonData.has("userName")){
+            if(jsonData.getString("userName")!="null"){
+            userName=jsonData.getString("userName")}
+        }
         var mjmlTag = """
             <mjml>
               <mj-body background-color="#fff" font-size="13px">
@@ -186,7 +191,7 @@ class Route {
                 <mj-section background-color="#fae716" padding-bottom="0px" padding-top="0">
                   <mj-column width="100%">
                     <mj-text align="center" font-size="13px"  font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="18px" padding-top="28px">HELLO
-                      <p style="font-size:16px;">Customer</p>
+                      <p style="font-size:16px;">$userName</p>
                     </mj-text>
                   </mj-column>
                 </mj-section>
@@ -238,7 +243,7 @@ class Route {
             </mjml>
         """.trimIndent()
         if (jsonData.has("email") && emailPattern.matches(jsonData.getString("email"))) {
-            sendMail.sendMail(jsonData.getString("email"), "The Inusrance you can check", mjmlTag)
+            sendMail.sendMail(jsonData.getString("email"), "The Insurance you can check", mjmlTag)
         }
     }
 
