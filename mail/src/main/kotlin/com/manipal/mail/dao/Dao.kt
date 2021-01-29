@@ -3,14 +3,13 @@ import org.bson.Document
 import org.bson.conversions.Bson
 import org.springframework.data.mongodb.core.MongoTemplate
 
-class Dao(mongoTemplate: MongoTemplate) {
-    private var mongoTemplate: MongoTemplate = mongoTemplate
+class Dao(private var mongoTemplate: MongoTemplate) {
     fun insert(dbName: String, doc: Document) {
         println(doc.toString())
         println(dbName)
-        //mongoTemplate.save(doc, dbName)
+
         mongoTemplate.execute(dbName) { mongoCollection ->
-            var list: MutableList<Document> = ArrayList<Document>()
+            val list= ArrayList<Document>()
 
             mongoCollection.insertOne(doc)
 
@@ -22,43 +21,43 @@ class Dao(mongoTemplate: MongoTemplate) {
 
     fun findAll(dbName: String): List<Document> {
         return mongoTemplate.execute(dbName) { mongoCollection ->
-            var list: MutableList<Document> = ArrayList<Document>()
-            list = mongoCollection.find().into(ArrayList<Document>())
+            var list= ArrayList<Document>()
+            list = mongoCollection.find().into(ArrayList())
             list
         }
     }
     fun findFields(dbName: String, query: Document,fields:Document): List<Document> {
-        //System.out.println(mongoTemplate);
+
 
         return mongoTemplate.execute(dbName) { mongoCollection ->
-            var list: MutableList<Document> = ArrayList<Document>()
-            list= mongoCollection.find(query).projection(fields).into(ArrayList<Document>())
+            var list= ArrayList<Document>()
+            list= mongoCollection.find(query).projection(fields).into(ArrayList())
             list
         }
     }
     fun findFields(dbName: String,fields:Document): List<Document> {
-        //System.out.println(mongoTemplate);
+
 
         return mongoTemplate.execute(dbName) { mongoCollection ->
-            var list: MutableList<Document> = ArrayList<Document>()
-            list= mongoCollection.find().projection(fields).into(ArrayList<Document>())
+            var list= ArrayList<Document>()
+            list= mongoCollection.find().projection(fields).into(ArrayList())
             list
         }
     }
     fun find(dbName: String, query: Document): List<Document> {
-        //System.out.println(mongoTemplate);
+
 
         return mongoTemplate.execute(dbName) { mongoCollection ->
-            var list: MutableList<Document> = ArrayList<Document>()
-            list = mongoCollection.find(query).into(ArrayList<Document>())
+            var list = ArrayList<Document>()
+            list = mongoCollection.find(query).into(ArrayList())
             list
         }
     }
     fun delete(dbName: String, query: Document){
-        //System.out.println(mongoTemplate);
+
 
         mongoTemplate.execute(dbName) { mongoCollection ->
-            var list: MutableList<Document> = ArrayList<Document>()
+            ArrayList<Document>()
             mongoCollection.findOneAndDelete(query)
 
         }
@@ -69,10 +68,9 @@ class Dao(mongoTemplate: MongoTemplate) {
         return mongoTemplate.execute(dbName) { mongoCollection ->
 
 
-            //print(list.toString())
-            var list1=mongoCollection.aggregate(query)
-            //print("yes")
-            //print(list1.toString())
+
+            val list1=mongoCollection.aggregate(query)
+
             return@execute list1.toMutableList()
         }
     }

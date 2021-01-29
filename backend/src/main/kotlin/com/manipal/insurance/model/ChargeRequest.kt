@@ -1,5 +1,5 @@
 package com.manipal.insurance.model
-import lombok.Data;
+import lombok.Data
 
 @Data
 class ChargeRequest {

@@ -1,84 +1,51 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[8]:
-
-
 from pymongo import MongoClient
 from pprint import pprint
 import pandas as pd
 
 
-# In[13]:
-
-
-def suggest(category,product):
-    client = MongoClient("mongodb+srv://pynondarashwin:MeYbvUAaJWtF3fqa@cluster0.led5h.mongodb.net/insurance?retryWrites=true&w=majority")
-    db=client.insurance
-    cursor=db.quotes.aggregate([{"$group":{"_id":{"email":"$formData.email","category":"$category","product":"$product"}}},{"$project":{"email":"$_id.email","category":"$_id.category","product":"$_id.product","_id":0}}])
-    data=pd.DataFrame(cursor)
-    if(len(data)):
+def suggest(category, product):
+    client = MongoClient(
+        "mongodb+srv://pynondarashwin:MeYbvUAaJWtF3fqa@cluster0.led5h.mongodb.net/insurance?retryWrites=true&w=majority")
+    db = client.insurance
+    print("Connected to MongoDB Server")
+    cursor = db.quotes.aggregate(
+        [{"$group": {"_id": {"email": "$formData.email", "category": "$category", "product": "$product"}}},
+         {"$project": {"email": "$_id.email", "category": "$_id.category", "product": "$_id.product", "_id": 0}}])
+    data = pd.DataFrame(cursor)
+    if len(data):
         print(data)
-        data["categoryProduct"]=data["category"]+","+data["product"]
-        categoryProduct=set(data["categoryProduct"])
-        outputData=list()
-        for i in categoryProduct:
-            iUsers=set(data.email[data["categoryProduct"]==i])    
-            for j in categoryProduct:
-                curOutput=list()
-                curOutput.append(i)
-                curOutput.append(j)
-                jUsers=set(data.email[data["categoryProduct"]==j])
-                curOutput.append(len(iUsers&jUsers))
-                outputData.append(curOutput)
-        outputData=pd.DataFrame(outputData,columns=["i","j","count"])
-        categoryProduct=category+","+product
-        processData=outputData[outputData["i"]==categoryProduct]
-        #print(processData)
+        data["categoryproduct"] = data["category"] + "," + data["product"]
+        categoryproduct = set(data["categoryproduct"])
+        outputdata = list()
+        for i in categoryproduct:
+            iusers = set(data.email[data["categoryproduct"] == i])
+            for j in categoryproduct:
+                curoutput = list()
+                curoutput.append(i)
+                curoutput.append(j)
+                jusers = set(data.email[data["categoryproduct"] == j])
+                curoutput.append(len(iusers & jusers))
+                outputdata.append(curoutput)
+        outputdata = pd.DataFrame(outputdata, columns=["i", "j", "count"])
+        categoryproduct = category + "," + product
+        processdata = outputdata[outputdata["i"] == categoryproduct]
+
         print("length")
-        print(len(set(data.email[data["categoryProduct"]==categoryProduct])))
-        total=len(set(data.email[data["categoryProduct"]==categoryProduct]))
-        if(total>0):
-            processData["count"]=(processData["count"]*100)/total
-            print(processData)
-            categories=set(processData.j[processData["count"]>60])
-            categoryList=list()
-            productList=list()
+        print(len(set(data.email[data["categoryproduct"] == categoryproduct])))
+        total = len(set(data.email[data["categoryproduct"] == categoryproduct]))
+        if total > 0:
+            processdata["count"] = (processdata["count"] * 100) / total
+            print(processdata)
+            categories = set(processdata.j[processdata["count"] > 60])
+            categorylist = list()
+            productlist = list()
             for cat in categories:
-                split=cat.split(",")
-                if(category!=split[0] and product!=split[1]):
-                    categoryList.append(split[0])
-                    productList.append(split[1])
-            return list(db.formConfig.find({"category":{"$in":categoryList},"product":{"$in":productList}},{"category":1,"product":1,"image":1,"info":1,"_id":0}))
+                split = cat.split(",")
+                if category != split[0] and product != split[1]:
+                    categorylist.append(split[0])
+                    productlist.append(split[1])
+            return list(db.formConfig.find({"category": {"$in": categorylist}, "product": {"$in": productlist}},
+                                           {"category": 1, "product": 1, "image": 1, "info": 1, "_id": 0}))
     return list()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-

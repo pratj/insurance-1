@@ -21,54 +21,61 @@ class KafkaConsumer {
     @KafkaListener(topics = ["pipe"], groupId = "mailer")
     fun consumer(messages: String) {
         dao = mongoTemplate?.let { Dao(it) }
-        //println("Info Received$messages")
-        var service = Route()
+
+        val service = Route()
         val message = messages.split(",".toRegex(), 2).toTypedArray()
         println("TYPE" + message[0])
         if (message[0] == "insurance") {
-            var mails = getAllEmails()
-            //dao?.insert("formConfig", Document.parse(message[1]))
-            if (mails != null) {
-                for (mail in mails) {
-                    if (mail != null && emailPattern.matches(JSONObject(mail.toJson()).getString("email"))) {
-                        service.newInsuranceMailer(JSONObject(mail.toJson()).getString("email"), message[1])
-                    }
+            val mails = getAllEmails()
 
-                }
-            }
+
+
+                        service.newInsuranceMailer(mails, message[1])
+
+
+
+
         }
         if (message[0] == "partner") {
-            var mails = getAllEmails()
-            //dao?.insert("partners", Document.parse(message[1]))
-            if (mails != null) {
-                for (mail in mails) {
-                    if (mail != null && emailPattern.matches(JSONObject(mail.toJson()).getString("email"))) {
-                        service.newPartnerMailer(JSONObject(mail.toJson()).getString("email"), message[1])
-                    }
+            val mails = getAllEmails()
 
-                }
+            if (mails != null) {
+
+
+                        service.newPartnerMailer(mails, message[1])
+
+
+
 
             }
         }
         if (message[0] == "quote") {
             dao?.insert("quotes", Document.parse(message[1]))
-            service?.quoteMailer(message[1])
+            service.quoteMailer(message[1])
         }
         if ("suggest" in message[0]) {
 
-            service?.suggestionMailer(message[1].replace("\\\"", "\""))
+            service.suggestionMailer(message[1].replace("\\\"", "\""))
         }
     }
 
-    fun getAllEmails(): List<Document>? {
-        var list: MutableList<Bson> = ArrayList<Bson>()
+    fun getAllEmails(): ArrayList<String> {
+        val list = ArrayList<Bson>()
         list.add(Aggregates.group("\$formData.email"))
-        var project = Document()
+        val project = Document()
         project["_id"] = 0
         project["email"] = "\$_id"
         list.add(Aggregates.project(project))
-        var mails = dao?.aggregate("quotes", list)
+        val mails = dao?.aggregate("quotes", list)
         print(mails)
-        return mails
+        val mailList= ArrayList<String>()
+        if (mails != null) {
+            for(mail in mails){
+                if (mail != null && emailPattern.matches(JSONObject(mail.toJson()).getString("email"))) {
+                    mailList.add(JSONObject(mail.toJson()).getString("email"))
+                }
+            }
+        }
+        return mailList
     }
 }

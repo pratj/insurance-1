@@ -4,11 +4,11 @@ import com.manipal.mail.mail.SendMail
 import org.json.JSONObject
 
 class Route {
-    var sendMail = SendMail()
-    var emailPattern = Regex("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
+    private var sendMail = SendMail()
+    private var emailPattern = Regex("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")
     fun quoteMailer(data: String) {
 
-        var jsonData = JSONObject(data)
+        val jsonData = JSONObject(data)
 
         var email = ""
         if (jsonData.getJSONObject("formData").has("email")) {
@@ -18,40 +18,44 @@ class Route {
         if (jsonData.getJSONObject("formData").has("fullName")) {
             userName=jsonData.getJSONObject("formData").getString("fullName")
         }
-        var quotes = jsonData.getJSONArray("quotes")
+        val quotes = jsonData.getJSONArray("quotes")
 
-        var mjmlTags = "<mjml>\n" +
-                "  <mj-body background-color=\"#ccd3e0\" font-size=\"13px\">\n" +
-                "    <mj-section background-color=\"#fae716\" padding-bottom=\"20px\" padding-top=\"20px\">\n" +
-                "      <mj-column width=\"100%\">\n" +
-                "        <mj-image src=\"https://i.ibb.co/xzSWHHT/favicon.png\" alt=\"\" align=\"center\" border=\"none\" width=\"100px\" padding-left=\"0px\" padding-right=\"0px\" padding-bottom=\"10px\" padding-top=\"10px\"></mj-image>\n" +
-                "       \n" +
-                "      </mj-column>\n" +
-                "      <mj-text align=\"center\"  font-size=\"13px\" font-family=\"Helvetica\" padding-left=\"25px\" padding-right=\"25px\" padding-bottom=\"28px\" padding-top=\"28px\"><span style=\"font-size:20px; font-weight:bold\">Insurance Bazaar</span>\n" +
-                "          <br />\n" +
-                "          \n" +
-                "        </mj-text>\n" +
-                "      <mj-divider  border-width=\"2px\" border-style=\"solid\" padding-left=\"20px\" padding-right=\"20px\" padding-bottom=\"0px\" padding-top=\"0\"></mj-divider>\n" +
-                "    </mj-section>\n" +
-                "    <mj-section background-color=\"#fae716\" padding-bottom=\"0px\" padding-top=\"0\">\n" +
-                "      <mj-column width=\"100%\">\n" +
-                "        <mj-text align=\"center\" font-size=\"13px\"  font-family=\"Ubuntu, Helvetica, Arial, sans-serif\" padding-left=\"25px\" padding-right=\"25px\" padding-bottom=\"18px\" padding-top=\"28px\">Hello\n" +
-                "          <p style=\"font-size:16px;\">${userName}</p>\n" +
-                "        </mj-text>\n" +
-                "      </mj-column>\n" +
-                "    </mj-section><mj-section background-color=\"#ffff\" padding-bottom=\"5px\" padding-top=\"0\">\n" +
-                "      <mj-column width=\"100%\">\n" +
-                "        \n" +
-                "        <mj-text align=\"center\"  font-size=\"13px\" font-family=\"Helvetica\" padding-left=\"25px\" padding-right=\"25px\" padding-bottom=\"28px\" padding-top=\"28px\"><span style=\"font-size:20px; font-weight:bold\">Please find the Quotes below.</span>\n" +
-                "          <br />\n" +
-                "          \n" +
-                "        </mj-text>\n" +
-                "      </mj-column>\n" +
-                "    </mj-section>"
+        var mjmlTags ="""
+            <mjml>
+              <mj-body background-color="#fff" font-size="13px">
+                <mj-section background-color="#fae716" padding-bottom="20px" padding-top="20px">
+                  <mj-column width="100%">
+                    <mj-image src="https://i.ibb.co/xzSWHHT/favicon.png" alt="" align="center" border="none" width="100px" padding-left="0px" padding-right="0px" padding-bottom="10px" padding-top="10px"></mj-image>
+                   
+                  </mj-column>
+                  <mj-text align="center"  font-size="13px" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="28px" padding-top="28px"><span style="font-size:20px; font-weight:bold">Insurance Bazaar</span>
+                      <br />
+                      
+                    </mj-text>
+                  <mj-divider  border-width="2px" border-style="solid" padding-left="20px" padding-right="20px" padding-bottom="0px" padding-top="0"></mj-divider>
+                </mj-section>
+                <mj-section background-color="#fae716" padding-bottom="0px" padding-top="0">
+                  <mj-column width="100%">
+                    <mj-text align="center" font-size="13px"  font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="18px" padding-top="28px">HELLO
+                      <p style="font-size:16px;">$userName</p>
+                    </mj-text>
+                  </mj-column>
+                </mj-section>
+                <mj-section background-color="#ffff" padding-bottom="5px" padding-top="0">
+                  <mj-divider  border-width="2px" border-style="solid" padding-left="20px" padding-right="20px" padding-bottom="0px" padding-top="0"></mj-divider>
+                  <mj-column width="100%">
+                    
+                    <mj-text align="center"  font-size="13px" font-family="Helvetica" padding-left="25px" padding-right="25px" padding-bottom="28px" padding-top="28px"><span style="font-size:20px; font-weight:bold">checkout the quotes below</span>
+                      <br />
+                      
+                    </mj-text>
+                  </mj-column>
+                </mj-section>
+                """
         for (i in 0 until quotes.length()) {
-            var keys = quotes.getJSONObject(i).getJSONObject("quote").keys()
+            val keys = quotes.getJSONObject(i).getJSONObject("quote").keys()
 
-            var quote = quotes.getJSONObject(i)
+            val quote = quotes.getJSONObject(i)
             mjmlTags += """<mj-section background-color="#ffff" padding-bottom="15px">
                   <mj-column>
                   <mj-image src="${quote.getString("image")}" alt="" align="center" border="none" width="50px" padding-left="0px" padding-right="0px" padding-bottom="10px" padding-top="10px"></mj-image>
@@ -66,15 +70,7 @@ class Route {
                 
                       </mj-column>"""
             }
-            //
-            //      <mj-column>
-            //        <mj-text align="center"  font-size="15px" font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="0px"><strong>IDV:98000</strong></mj-text>
-            //
-            //      </mj-column>
-            //      <mj-column>
-            //        <mj-text align="center" font-size="15px" font-family="Ubuntu, Helvetica, Arial, sans-serif" padding-left="25px" padding-right="25px" padding-bottom="0px"><strong>Total Price:6900</strong></mj-text>
-            //
-            //      </mj-column>
+
             mjmlTags += "</mj-section>"
 
         }
@@ -90,14 +86,14 @@ class Route {
                   </mj-body>
                 </mjml>"""
         if (emailPattern.matches(email)) {
-            sendMail.sendMail(email, "the quotes for you only", mjmlTags)
+            sendMail.sendMail(arrayListOf(email), "the quotes for you only", mjmlTags)
         }
 
     }
 
-    fun newInsuranceMailer(email: String, data: String) {
-        var jsonData = JSONObject(data)
-        var mjmlTag = """
+    fun newInsuranceMailer(email: ArrayList<String>, data: String) {
+        val jsonData = JSONObject(data)
+        val mjmlTag = """
             <mjml>
               <mj-body background-color="#fff" font-size="13px">
                 <mj-section background-color="#fae716" padding-bottom="20px" padding-top="20px">
@@ -168,11 +164,11 @@ class Route {
     fun suggestionMailer(data: String) {
         println("suggestionMailer")
         println(data)
-        var jsonData = JSONObject(data)
+        val jsonData = JSONObject(data)
         var userName="Customer"
-        if(jsonData.has("userName")){
-            if(jsonData.getString("userName")!="null"){
-            userName=jsonData.getString("userName")}
+        if(jsonData.has("userName")&&jsonData.getString("userName")!="null"){
+
+            userName=jsonData.getString("userName")
         }
         var mjmlTag = """
             <mjml>
@@ -207,7 +203,7 @@ class Route {
                 </mj-section>
                 """
         for (i in 0 until jsonData.getJSONArray("category").length()) {
-            var jsonData1 = jsonData.getJSONArray("category").getJSONObject(i)
+            val jsonData1 = jsonData.getJSONArray("category").getJSONObject(i)
             mjmlTag += """<mj-section background-color="#ffff" padding-bottom="15px">
                   
                 
@@ -243,13 +239,13 @@ class Route {
             </mjml>
         """.trimIndent()
         if (jsonData.has("email") && emailPattern.matches(jsonData.getString("email"))) {
-            sendMail.sendMail(jsonData.getString("email"), "The Insurance you can check", mjmlTag)
+            sendMail.sendMail(arrayListOf(jsonData.getString("email")), "The Insurance you can check", mjmlTag)
         }
     }
 
-    fun newPartnerMailer(email: String, data: String) {
-        var jsonData = JSONObject(data)
-        var mjmlTag = """
+    fun newPartnerMailer(email: ArrayList<String>, data: String) {
+        val jsonData = JSONObject(data)
+        val mjmlTag = """
             <mjml>
               <mj-body background-color="#fff" font-size="13px">
                 <mj-section background-color="#fae716" padding-bottom="20px" padding-top="20px">

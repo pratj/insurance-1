@@ -1,4 +1,4 @@
-package com.store.demo.kafka.config
+package com.manipal.insurance.kafka.config
 
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.StringSerializer

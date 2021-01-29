@@ -48,13 +48,13 @@ return service?.partnerPaymentCount()
         var jsonData=JSONObject(data)
         jsonData=jsonData.getJSONObject("data")
 
-        var chargeRequest:ChargeRequest=ChargeRequest()
+        val chargeRequest=ChargeRequest()
         chargeRequest.setStripeEmail(jsonData.getJSONObject("token").getString("email"))
         chargeRequest.setDescription("Example charge")
         chargeRequest.setAmount(jsonData.getInt("amount"))
         chargeRequest.setStripeToken(jsonData.getJSONObject("token").getString("id"))
         chargeRequest.setCurrency("INR")
-        var result=JSONObject()
+        val result=JSONObject()
 
         val charge = paymentsService!!.charge(chargeRequest)
         model.addAttribute("id", charge.id)
@@ -62,7 +62,7 @@ return service?.partnerPaymentCount()
         model.addAttribute("status", charge.status)
         result.put("status",charge.status)
         model.addAttribute("chargeId", charge.id)
-        result.put("balance_transcation",charge.balanceTransaction)
+        result.put("balance_transaction",charge.balanceTransaction)
         model.addAttribute("balance_transaction", charge.balanceTransaction)
         jsonData.put("result",result)
         jsonData.put("time",Date())
@@ -71,14 +71,14 @@ return service?.partnerPaymentCount()
         val headers = HttpHeaders()
         headers.add("Response-from", "payment")
         return ResponseEntity<String?>(result.toString(), headers, HttpStatus.OK)
-        //return model
+
     }
     @GetMapping("/map/location")
     fun mapLocation(): ArrayList<Document>? {
         return service?.findUserLocation()
     }
     @DeleteMapping("/category/{category}/product/{product}")
-    fun deleteFormConfig(@RequestParam category: String,@RequestParam product: String): String? {
+    fun deleteFormConfig(@PathVariable category: String, @PathVariable product: String): String? {
         return service?.deleteFormConfig(category,product)
     }
     @ExceptionHandler(StripeException::class)
@@ -106,11 +106,11 @@ return service?.partnerPaymentCount()
         val jsonData = JSONObject(data)
         if (jsonData.has("partners")) {
             for (i in 0 until jsonData.getJSONArray("partners").length()) {
-                var curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
+                val curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
                 curPartner.put("category", jsonData.getString("category"))
                 curPartner.put("product", jsonData.getString("product"))
                 service?.addPartner(curPartner.toString())
-                //dao?.insert("partners", Document.parse(curPartner.toString()))
+
             }
             jsonData.remove("partners")
         }
@@ -121,9 +121,9 @@ return service?.partnerPaymentCount()
         if (configs != null) {
             if (configs.isNotEmpty()) {
                 flag = false
-                var dat = configs[0]
+                val dat = configs[0]
                 jsonData.put("_id", dat["_id"])
-                configs?.get(0)?.let { dao?.delete("formConfig", it) }
+                configs[0].let { dao?.delete("formConfig", it) }
             }
 
         }
