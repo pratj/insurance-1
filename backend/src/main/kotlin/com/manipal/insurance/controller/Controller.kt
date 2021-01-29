@@ -37,50 +37,55 @@ class Controller {
 
     @Autowired
     private val paymentsService: StripeService? = null
+
     @GetMapping("/category/partner/payment/count")
     fun paymentPartnerCount(): MutableList<Document>? {
-return service?.partnerPaymentCount()
+        return service?.partnerPaymentCount()
     }
+
     @PostMapping("/charge")
     @Throws(StripeException::class)
     fun charge(@RequestBody data: String, model: Model): ResponseEntity<String?> {
         dao = mongoTemplate?.let { Dao(it) }
-        var jsonData=JSONObject(data)
-        jsonData=jsonData.getJSONObject("data")
+        var jsonData = JSONObject(data)
+        jsonData = jsonData.getJSONObject("data")
 
-        val chargeRequest=ChargeRequest()
+        val chargeRequest = ChargeRequest()
         chargeRequest.setStripeEmail(jsonData.getJSONObject("token").getString("email"))
         chargeRequest.setDescription("Example charge")
         chargeRequest.setAmount(jsonData.getInt("amount"))
         chargeRequest.setStripeToken(jsonData.getJSONObject("token").getString("id"))
         chargeRequest.setCurrency("INR")
-        val result=JSONObject()
+        val result = JSONObject()
 
         val charge = paymentsService!!.charge(chargeRequest)
         model.addAttribute("id", charge.id)
-        result.put("id",charge.id)
+        result.put("id", charge.id)
         model.addAttribute("status", charge.status)
-        result.put("status",charge.status)
+        result.put("status", charge.status)
         model.addAttribute("chargeId", charge.id)
-        result.put("balance_transaction",charge.balanceTransaction)
+        result.put("balance_transaction", charge.balanceTransaction)
         model.addAttribute("balance_transaction", charge.balanceTransaction)
-        jsonData.put("result",result)
-        jsonData.put("time",Date())
-        dao?.insert("payment",Document.parse(jsonData.toString()))
+        jsonData.put("result", result)
+        jsonData.put("time", Date())
+        dao?.insert("payment", Document.parse(jsonData.toString()))
         println("Result >>>>$result")
         val headers = HttpHeaders()
         headers.add("Response-from", "payment")
         return ResponseEntity<String?>(result.toString(), headers, HttpStatus.OK)
 
     }
+
     @GetMapping("/map/location")
     fun mapLocation(): ArrayList<Document>? {
         return service?.findUserLocation()
     }
+
     @DeleteMapping("/category/{category}/product/{product}")
     fun deleteFormConfig(@PathVariable category: String, @PathVariable product: String): String? {
-        return service?.deleteFormConfig(category,product)
+        return service?.deleteFormConfig(category, product)
     }
+
     @ExceptionHandler(StripeException::class)
     fun handleError(model: Model, ex: StripeException): Model? {
         model.addAttribute("error", ex.message)
@@ -88,55 +93,15 @@ return service?.partnerPaymentCount()
     }
 
     @PostMapping("/configs")
-    fun addAllConfigs(@RequestBody data: String?): ResponseEntity<String?> {
-        val jsonData = JSONArray(data)
-        for (i in 0 until jsonData.length()) {
-            addConfig(jsonData.get(i).toString())
-        }
-        val headers = HttpHeaders()
-        headers.add("Response-from", "ToDoController")
-        return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
+    fun addAllConfigs(@RequestBody data: String?): ResponseEntity<String?>? {
+        return service?.addAllConfigs(data)
     }
 
     @PostMapping("/config")
     @Throws(JSONException::class)
-    fun addConfig(@RequestBody data: String?): ResponseEntity<String?> {
-        dao = mongoTemplate?.let { Dao(it) }
-        var flag = true
-        val jsonData = JSONObject(data)
-        if (jsonData.has("partners")) {
-            for (i in 0 until jsonData.getJSONArray("partners").length()) {
-                val curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
-                curPartner.put("category", jsonData.getString("category"))
-                curPartner.put("product", jsonData.getString("product"))
-                service?.addPartner(curPartner.toString())
+    fun addConfig(@RequestBody data: String?): ResponseEntity<String?>? {
 
-            }
-            jsonData.remove("partners")
-        }
-        println(jsonData.toString())
-
-        val configs = service?.findFormConfig(jsonData.getString("category"), jsonData.getString("product"))
-
-        if (configs != null) {
-            if (configs.isNotEmpty()) {
-                flag = false
-                val dat = configs[0]
-                jsonData.put("_id", dat["_id"])
-                configs[0].let { dao?.delete("formConfig", it) }
-            }
-
-        }
-        if (flag) {
-            kafkaTemplate?.send("pipe", "insurance,$jsonData")
-        }
-
-
-        val doc = Document.parse(jsonData.toString())
-        dao?.insert("formConfig", doc)
-        val headers = HttpHeaders()
-        headers.add("Response-from", "ToDoController")
-        return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
+        return service?.addConfig(data)
     }
 
     @GetMapping("/categories")

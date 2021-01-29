@@ -2,14 +2,13 @@ package com.manipal.insurance.dao
 
 import org.bson.Document
 import org.bson.conversions.Bson
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 
-@Service
+@Repository
 open class  Dao(private var mongoTemplate: MongoTemplate) {
-@Autowired
-var mongoTemplate2:MongoTemplate?=null
+
     fun insert(dbName: String, doc: Document) {
         println(doc.toString())
         println(dbName)
@@ -34,7 +33,7 @@ var mongoTemplate2:MongoTemplate?=null
     fun findFields(dbName: String, query: Document,fields:Document): ArrayList<Document>? {
 
 
-        return mongoTemplate2?.execute(dbName) { mongoCollection ->
+        return mongoTemplate.execute(dbName) { mongoCollection ->
             var list= ArrayList<Document>()
             list= mongoCollection.find(query).projection(fields).into(ArrayList())
             list
@@ -77,6 +76,9 @@ var mongoTemplate2:MongoTemplate?=null
 
            return@execute list1.toMutableList()
         }
+    }
+    fun executeCommand(query:String):Document{
+        return mongoTemplate.executeCommand(query) as Document
     }
 
 }

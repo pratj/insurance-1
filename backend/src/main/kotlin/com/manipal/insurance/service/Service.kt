@@ -14,8 +14,12 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestBody
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -24,7 +28,6 @@ import java.util.stream.Collectors
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.set
-
 
 
 @Service
@@ -38,8 +41,9 @@ class Service {
 
 
     fun findUniqueCategory(): List<Document>? {
-
-        dao = mongoTemplate?.let { Dao(it) }
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
         print(dao)
         val fields = Document()
         fields["category"] = 1
@@ -51,7 +55,9 @@ class Service {
     }
 
     fun deleteFormConfig(category: String, product: String): String {
-        dao = mongoTemplate?.let { Dao(it) }
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
         val query = Document()
         query["category"] = category
         query["product"] = product
@@ -61,7 +67,9 @@ class Service {
     }
 
     fun findUserLocation(): ArrayList<Document> {
-        dao = mongoTemplate?.let { Dao(it) }
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
         val paidQuery = "{\n" +
                 "        aggregate: \"payment\",\n" +
                 "        pipeline: [\n" +
@@ -90,8 +98,8 @@ class Service {
                 "        ],\n" +
                 "        cursor: {}\n" +
                 "    }"
-        val paidMembers = mongoTemplate?.executeCommand(paidQuery) as Document
-        val paidData = JSONObject(paidMembers.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
+        val paidMembers = dao?.executeCommand(paidQuery)
+        val paidData = JSONObject(paidMembers?.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
         val nonPaidQuery = "{\n" +
                 "    aggregate: \"quotes\",\n" +
                 "    pipeline: [\n" +
@@ -143,8 +151,8 @@ class Service {
                 "    ],\n" +
                 "    cursor: {}\n" +
                 "}"
-        val nonPaidMembers = mongoTemplate?.executeCommand(nonPaidQuery) as Document
-        val nonPaidData = JSONObject(nonPaidMembers.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
+        val nonPaidMembers = dao?.executeCommand(nonPaidQuery)
+        val nonPaidData = JSONObject(nonPaidMembers?.toJson()).getJSONObject("cursor").getJSONArray("firstBatch")
         val output = ArrayList<Document>()
         for (i in 0 until nonPaidData.length()) {
             output.add(Document.parse(nonPaidData[i].toString()))
@@ -156,8 +164,10 @@ class Service {
     }
 
     fun partnerPaymentCount(): MutableList<Document> {
-        dao = mongoTemplate?.let { Dao(it) }
-        val list= ArrayList<Bson>()
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
+        val list = ArrayList<Bson>()
         val multiIdMap: MutableMap<String, Any> = HashMap()
         multiIdMap["partner"] = "\$partner"
         multiIdMap["category"] = "\$category"
@@ -200,7 +210,7 @@ class Service {
                 }
             }
         }
-        val resultFormat= ArrayList<Document>()
+        val resultFormat = ArrayList<Document>()
         for (i in 0 until result.length()) {
             resultFormat.add(Document.parse(result.getJSONObject(i).toString()))
         }
@@ -209,7 +219,9 @@ class Service {
     }
 
     fun addPartner(data: String) {
-        dao = mongoTemplate?.let { Dao(it) }
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
         val jsonData = JSONObject(data)
         val query = Document()
         query["category"] = jsonData.getString("category")
@@ -233,7 +245,9 @@ class Service {
     }
 
     fun findFormConfig(category: String, product: String): List<Document>? {
-        dao = mongoTemplate?.let { Dao(it) }
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
         val query = Document()
         query["category"] = category
         query["product"] = product
@@ -248,14 +262,16 @@ class Service {
 
     fun apiRequests(data: String): List<Document> {
         println(data)
-        dao = mongoTemplate?.let { Dao(it) }
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
         val jsonData = JSONObject(data)
         val query = Document()
         query["category"] = jsonData.getString("category")
         query["product"] = jsonData.getString("product")
         val dbQuotes = JSONArray()
 
-        val quotes= ArrayList<Document>()
+        val quotes = ArrayList<Document>()
 
         val partners = dao?.find("partners", query)
         if (partners != null) {
@@ -306,8 +322,10 @@ class Service {
     }
 
     fun categoryPartnersCount(): List<Document>? {
-        dao = mongoTemplate?.let { Dao(it) }
-        val list= ArrayList<Bson>()
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
+        val list = ArrayList<Bson>()
 
         list.add(Aggregates.group("\$category", Accumulators.sum("partnerCount", 1)))
         val project = Document()
@@ -320,8 +338,10 @@ class Service {
     }
 
     fun partnerCategoryCount(): List<Document>? {
-        dao = mongoTemplate?.let { Dao(it) }
-        val list= ArrayList<Bson>()
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
+        val list = ArrayList<Bson>()
         list.add(Aggregates.group("\$partner", Accumulators.sum("count", 1)))
         val project = Document()
         project["_id"] = 0
@@ -333,8 +353,10 @@ class Service {
     }
 
     fun categoryRequests(): List<Document>? {
-        dao = mongoTemplate?.let { Dao(it) }
-        val list= ArrayList<Bson>()
+        if (mongoTemplate != null) {
+            dao = mongoTemplate?.let { Dao(it) }
+        }
+        val list = ArrayList<Bson>()
         list.add(Aggregates.group("\$category", Accumulators.sum("count", 1)))
         val project = Document()
         project["_id"] = 0
@@ -349,7 +371,9 @@ class Service {
 
         val output = JSONObject()
         for (i in 0 until map.length()) {
+
             if (data.has(map.getJSONObject(i).getString("from"))) {
+                println(map.getJSONObject(i).getString("from"))
                 if (!output.has(map.getJSONObject(i).getString("to"))) {
                     output.put(map.getJSONObject(i).getString("to"), data.getString(map.getJSONObject(i).getString("from")))
                 } else {
@@ -358,6 +382,7 @@ class Service {
             } else {
                 output.put(map.getJSONObject(i).getString("to"), "")
             }
+
         }
         return output
     }
@@ -411,5 +436,52 @@ class Service {
         val body = okhttp3.RequestBody.create(MediaType.get("application/json; charset=utf-8"), data.toString())
         request = request.post(body)
         return request
+    }
+    fun addAllConfigs(data: String?): ResponseEntity<String?> {
+        val jsonData = JSONArray(data)
+        for (i in 0 until jsonData.length()) {
+            addConfig(jsonData.get(i).toString())
+        }
+        val headers = HttpHeaders()
+        headers.add("Response-from", "ToDoController")
+        return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
+    }
+    fun addConfig(data:String?): ResponseEntity<String?>{
+        dao = mongoTemplate?.let { Dao(it) }
+        var flag = true
+        val jsonData = JSONObject(data)
+        if (jsonData.has("partners")) {
+            for (i in 0 until jsonData.getJSONArray("partners").length()) {
+                val curPartner = jsonData.getJSONArray("partners").getJSONObject(i)
+                curPartner.put("category", jsonData.getString("category"))
+                curPartner.put("product", jsonData.getString("product"))
+                addPartner(curPartner.toString())
+
+            }
+            jsonData.remove("partners")
+        }
+        println(jsonData.toString())
+
+        val configs = findFormConfig(jsonData.getString("category"), jsonData.getString("product"))
+
+        if (configs != null) {
+            if (configs.isNotEmpty()) {
+                flag = false
+                val dat = configs[0]
+                jsonData.put("_id", dat["_id"])
+                configs[0].let { dao?.delete("formConfig", it) }
+            }
+
+        }
+        if (flag) {
+            kafkaTemplate?.send("pipe", "insurance,$jsonData")
+        }
+
+
+        val doc = Document.parse(jsonData.toString())
+        dao?.insert("formConfig", doc)
+        val headers = HttpHeaders()
+        headers.add("Response-from", "ToDoController")
+        return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
     }
 }
