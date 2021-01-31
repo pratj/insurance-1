@@ -18,14 +18,11 @@ spec:
         app: insurance-frontend
     spec:
       containers:
-      - image: pratj97/insurance-frontend:v1
+      - image: pratj97/insurance-frontend:v3
         name: insurance-frontend
         ports:
           - name: http
             containerPort: 80
-        env:
-          - name: REACT_APP_BASE_URL_ARG
-            value: http://192.168.49.2:31815
 ---
 apiVersion: v1
 kind: Service
