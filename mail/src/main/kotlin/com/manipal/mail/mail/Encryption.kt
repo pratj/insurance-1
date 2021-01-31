@@ -29,7 +29,8 @@ class Encryption {
     @Throws(IOException::class)
     fun decrypt(codedString: String): String {
         var messageString = ""
-        val file = File("src/main/kotlin/com/manipal/mail/mail/key.txt")
+
+        val file = File("src/key.txt")
         val fileInputStream = FileInputStream(file)
         keys = String(fileInputStream.readAllBytes())
 

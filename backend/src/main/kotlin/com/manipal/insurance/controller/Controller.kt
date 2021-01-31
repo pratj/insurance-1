@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-
+@CrossOrigin
 @RestController
 @RequestMapping("/api")
 class Controller {

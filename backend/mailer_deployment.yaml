@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: insurance-mailer
+  name: insurance-mailer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insurance-mailer
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: insurance-mailer
+    spec:
+      containers:
+      - image: rashwinnonda/insurance_mailer
+        name: insurance-mailer-59mt2

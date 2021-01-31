@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: insurance-frontend
+  name: insurance-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: insurance-frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: insurance-frontend
+    spec:
+      containers:
+      - image: pratj97/insurance-frontend:v1
+        name: insurance-frontend
+        ports:
+          - name: http
+            containerPort: 80
+        env:
+          - name: REACT_APP_BASE_URL_ARG
+            value: http://192.168.49.2:31815
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: insurance-frontend
+  name: insurance-frontend
+spec:
+  ports:
+  - name: http
+    port: 3000
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: insurance-frontend
+  type: NodePort
