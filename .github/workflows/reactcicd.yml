@@ -44,9 +44,12 @@ jobs:
           DOCKER_USER: ${{secrets.DOCKER_USERNAME}} 
           DOCKER_PASSWORD:  ${{secrets.DOCKER_PASSWORD}}
           REPO: ${{secrets.REPO}} 
-        run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
-      - name: build docker 
-        run: |
-          docker build "$GITHUB_WORKSPACE" -f  "Dockerfile" 
-    #       docker push pratj97/insurance-backend:${{ github.sha }}
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & push Docker image
+        with:
+          image: pratj97/insurance-frontend
+          tags: v1, latest
+          registry: registry-url.io
+          dockerfile: ./Frontend/InsuranceApplication/Dockerfile.ci
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
