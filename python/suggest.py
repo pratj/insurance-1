@@ -13,6 +13,7 @@ def suggest(category, product):
     cursor = db.quotes.aggregate(
         [{"$group": {"_id": {"email": "$formData.email", "category": "$category", "product": "$product"}}},
          {"$project": {"email": "$_id.email", "category": "$_id.category", "product": "$_id.product", "_id": 0}}])
+
     data = pd.DataFrame(cursor)
     if len(data):
         print(data)

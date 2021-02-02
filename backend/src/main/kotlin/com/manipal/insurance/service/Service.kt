@@ -19,7 +19,6 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestBody
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -262,6 +261,7 @@ class Service {
 
     fun apiRequests(data: String): List<Document> {
         println(data)
+
         if (mongoTemplate != null) {
             dao = mongoTemplate?.let { Dao(it) }
         }
@@ -446,7 +446,7 @@ class Service {
         headers.add("Response-from", "ToDoController")
         return ResponseEntity<String?>(jsonData.toString(), headers, HttpStatus.OK)
     }
-    fun addConfig(data:String?): ResponseEntity<String?>{
+    fun addConfig(data: String?): ResponseEntity<String?>{
         dao = mongoTemplate?.let { Dao(it) }
         var flag = true
         val jsonData = JSONObject(data)

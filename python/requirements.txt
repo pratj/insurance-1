@@ -1,3 +1,4 @@
-pandas
+pandas~=1.2.1
 kafka-python
-pymongo
+pymongo~=3.11.2
+dnspython

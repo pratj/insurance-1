@@ -21,16 +21,12 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-@CrossOrigin
+
 @RestController
 @RequestMapping("/api")
 class Controller {
     @Autowired
     var mongoTemplate: MongoTemplate? = null
-
-    @Autowired
-    private val kafkaTemplate: KafkaTemplate<String, String>? = null
-
     @Autowired
     var service: Service? = null
     var dao: Dao? = null
@@ -117,6 +113,7 @@ class Controller {
     @PostMapping("/response")
     @Throws(Exception::class)
     fun getData(@RequestBody data: String): List<Document>? {
+
         return service?.apiRequests(data)
     }
 

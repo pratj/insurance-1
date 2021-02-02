@@ -33,3 +33,4 @@ build/
 ### VS Code ###
 .vscode/
 /src/main/kotlin/com/manipal/mail/mail/key.txt
+/src/main/resources/application.properties
