@@ -28,7 +28,7 @@ jobs:
       with:
         java-version: 11
     - name: Build and Test with Maven
-      run: mvn -B package 
+      run: mvn clean package 
       working-directory: backend
   
   docker-push: 
