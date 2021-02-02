@@ -48,5 +48,5 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
       - name: build docker 
         run: |
-          docker build "$GITHUB_WORKSPACE/Frontend/InsuranceApplication" -f  "Dockerfile" 
-    #       docker push pratj97/insurance-backend:${{ github.sha }}
+          docker build "$GITHUB_WORKSPACE/Frontend/InsuranceApplication" -f  "Dockerfile" -t pratj97/insurance-frontend:${{ github.sha }}
+          docker push pratj97/insurance-frontend:${{ github.sha }}
