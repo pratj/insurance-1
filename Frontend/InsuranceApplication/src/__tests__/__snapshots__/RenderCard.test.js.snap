@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderCard snapshot 1`] = `
+<div
+  className="cardRender undefined"
+  data-test="renderCard"
+>
+  <WithStyles(ForwardRef(Grid))
+    container={true}
+    spacing={3}
+  />
+  <footer
+    style={
+      Object {
+        "marginLeft": "40%",
+        "marginTop": "90px",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(Button))
+      color="primary"
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "",
+          "borderRadius": "90px",
+        }
+      }
+      variant="outlined"
+    >
+      <b>
+        <h3>
+          Don't know what to choose?
+        </h3>
+      </b>
+    </WithStyles(ForwardRef(Button))>
+  </footer>
+</div>
+`;

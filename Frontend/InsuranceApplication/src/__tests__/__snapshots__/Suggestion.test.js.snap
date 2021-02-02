@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Suggestion snapshot 1`] = `
+<div>
+  <video
+    autoPlay={true}
+    id="background-video"
+    loop={true}
+    muted={true}
+    style={
+      Object {
+        "height": "100%",
+        "left": "50%",
+        "objectFit": "cover",
+        "position": "absolute",
+        "top": "50%",
+        "transform": "translate(-50%,-50%)",
+        "width": "100%",
+        "zIndex": "-1",
+      }
+    }
+  >
+    <source
+      src="video.mp4"
+      type="video/mp4"
+    />
+    <source
+      src="video.mp4"
+      type="video/ogg"
+    />
+    Your browser does not support the video tag.
+  </video>
+  <h1
+    style={
+      Object {
+        "color": "rgba(0,0,0,0.7)",
+        "display": "flex",
+        "justifyContent": "center",
+        "textAlign": "center",
+      }
+    }
+  />
+   
+  <div
+    className="bigcard"
+    overlayStyle={
+      Object {
+        "backgroundColor": "transparent",
+      }
+    }
+    style={
+      Object {
+        "backdropFilter": "blur(5px)",
+        "background": "rgba(0,0,0,0.3)",
+        "borderLeft": "3px solid rgba(255,255,255,0.1)",
+        "borderRadius": "10px",
+        "borderTop": "3px solid rgba(255,255,255,0.1)",
+        "boxShadow": "20px 20px 50px rgba(0,0,0,0.5)",
+        "padding": "20px",
+      }
+    }
+  >
+    <h1
+      style={
+        Object {
+          "color": "white",
+        }
+      }
+    >
+       
+      <span
+        style={
+          Object {
+            "color": "rgba(255,255,255,0.7)",
+          }
+        }
+      >
+        Hello, checkout some of our most popular Insurances
+      </span>
+    </h1>
+    <div
+      className="cardRender undefined"
+      data-test="suggestion"
+    >
+      <WithStyles(ForwardRef(Grid))
+        container={true}
+        spacing={3}
+      />
+    </div>
+  </div>
+</div>
+`;

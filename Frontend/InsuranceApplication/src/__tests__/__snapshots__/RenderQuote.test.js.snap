@@ -1,0 +1,162 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderQuote snapshot 1`] = `
+<div
+  data-test="renderQuote"
+>
+  <WithStyles(ForwardRef(Grid))
+    container={true}
+  >
+    <WithStyles(ForwardRef(Grid))
+      item={true}
+      key="0"
+      sm={12}
+      xs={12}
+    >
+      <WithStyles(ForwardRef(Card))
+        className="makeStyles-root-1"
+        key="0"
+        style={
+          Object {
+            "margin": "auto",
+            "marginTop": 20,
+            "maxWidth": 700,
+          }
+        }
+      >
+        <WithStyles(ForwardRef(CardMedia))
+          style={
+            Object {
+              "width": 250,
+            }
+          }
+        />
+        <div>
+          <WithStyles(ForwardRef(CardContent))>
+            <WithStyles(ForwardRef(Typography))
+              component="h2"
+              gutterBottom={true}
+              variant="h5"
+            >
+              Tata AIG
+            </WithStyles(ForwardRef(Typography))>
+            <WithStyles(ForwardRef(Divider)) />
+            <br />
+            <WithStyles(ForwardRef(Typography))
+              color="textSecondary"
+              component="p"
+              variant="body2"
+            >
+              Premium
+              : 
+              400
+            </WithStyles(ForwardRef(Typography))>
+          </WithStyles(ForwardRef(CardContent))>
+        </div>
+        <ReactStripeCheckout
+          ComponentClass="span"
+          amount={40000}
+          billingAddress={true}
+          className="StripeCheckout"
+          currency="INR"
+          description="Car Insurance By Tata AIG"
+          label="Pay With Card"
+          locale="auto"
+          name="InsuranceBzr"
+          reconfigureOnUpdate={false}
+          shippingAddress={true}
+          token={[Function]}
+          triggerEvent="onClick"
+        >
+          <WithStyles(ForwardRef(Button))
+            className="stripebutton"
+            onClick={[Function]}
+            style={
+              Object {
+                "alignContent": "center",
+                "backgroundColor": "orange",
+                "borderRadius": "15px",
+                "display": "flex",
+                "height": "20%",
+                "margin": "auto",
+                "marginLeft": "65px",
+                "marginTop": "65px",
+              }
+            }
+          >
+            Buy Now
+          </WithStyles(ForwardRef(Button))>
+        </ReactStripeCheckout>
+      </WithStyles(ForwardRef(Card))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Snackbar))
+    autoHideDuration={6000}
+    onClose={[Function]}
+    open={false}
+  >
+    <Alert
+      onClose={[Function]}
+      severity="success"
+    >
+      Success! Check email for details
+    </Alert>
+  </WithStyles(ForwardRef(Snackbar))>
+  <div>
+    <WithStyles(ForwardRef(Dialog))
+      TransitionComponent={
+        Object {
+          "$$typeof": Symbol(react.forward_ref),
+          "render": [Function],
+        }
+      }
+      aria-describedby="alert-dialog-slide-description"
+      aria-labelledby="alert-dialog-slide-title"
+      keepMounted={true}
+      onClose={[Function]}
+      open={false}
+    >
+      <WithStyles(ForwardRef(DialogTitle))
+        id="alert-dialog-slide-title"
+        style={
+          Object {
+            "textAlign": "center",
+          }
+        }
+      >
+        Your Payment of was successful
+      </WithStyles(ForwardRef(DialogTitle))>
+      <WithStyles(ForwardRef(DialogContent))>
+        <img
+          alt="not available"
+          src="https://i.pinimg.com/originals/0d/e4/1a/0de41a3c5953fba1755ebd416ec109dd.gif"
+          style={
+            Object {
+              "marginLeft": "12%",
+            }
+          }
+        />
+        <WithStyles(ForwardRef(DialogContentText))
+          id="alert-dialog-slide-description"
+        >
+          Receipt has been sent to your email address. Thank you for choosing us!
+        </WithStyles(ForwardRef(DialogContentText))>
+      </WithStyles(ForwardRef(DialogContent))>
+      <WithStyles(ForwardRef(DialogActions))>
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          onClick={[Function]}
+        >
+          Check out more Insurances
+        </WithStyles(ForwardRef(Button))>
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          onClick={[Function]}
+        >
+          Close
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(DialogActions))>
+    </WithStyles(ForwardRef(Dialog))>
+  </div>
+</div>
+`;

@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Form snapshots 1`] = `
+<div
+  className="form"
+  data-test="form"
+/>
+`;

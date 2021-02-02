@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Products snapshot 1`] = `
+<WithStyles(ForwardRef(Grid))
+  className="products"
+  container={true}
+  data-test="products"
+>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    sm={2}
+    xs={false}
+  />
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    sm={8}
+    xs={12}
+  >
+    <WithStyles(ForwardRef(Typography))
+      style={
+        Object {
+          "color": "#b58500",
+          "textAlign": "center",
+        }
+      }
+      variant="h3"
+    >
+      <b>
+        Our products
+      </b>
+    </WithStyles(ForwardRef(Typography))>
+    <Carousel
+      autoPlay={true}
+      axis="horizontal"
+      centerSlidePercentage={80}
+      dynamicHeight={true}
+      interval={3000}
+      labels={
+        Object {
+          "item": "slide item",
+          "leftArrow": "previous slide / item",
+          "rightArrow": "next slide / item",
+        }
+      }
+      onChange={[Function]}
+      onClickItem={[Function]}
+      onClickThumb={[Function]}
+      onSwipeEnd={[Function]}
+      onSwipeMove={[Function]}
+      onSwipeStart={[Function]}
+      preventMovementUntilSwipeScrollTolerance={false}
+      renderArrowNext={[Function]}
+      renderArrowPrev={[Function]}
+      renderIndicator={[Function]}
+      renderItem={[Function]}
+      renderThumbs={[Function]}
+      selectedItem={0}
+      showArrows={true}
+      showIndicators={true}
+      showStatus={true}
+      showThumbs={true}
+      statusFormatter={[Function]}
+      stopOnHover={true}
+      swipeScrollTolerance={5}
+      swipeable={true}
+      transitionTime={350}
+      verticalSwipe="standard"
+      width="100%"
+    />
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    sm={2}
+    xs={false}
+  />
+</WithStyles(ForwardRef(Grid))>
+`;

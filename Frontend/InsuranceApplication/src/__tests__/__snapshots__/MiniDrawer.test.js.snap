@@ -1,0 +1,164 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MiniDrawer snapshot 1`] = `
+<div
+  className="makeStyles-root-1"
+  data-test="miniDrawer"
+>
+  <WithStyles(CssBaseline) />
+  <WithStyles(ForwardRef(AppBar))
+    className="makeStyles-appBar-3"
+    position="fixed"
+    style={
+      Object {
+        "background": "gold",
+      }
+    }
+  >
+    <WithStyles(ForwardRef(Toolbar))>
+      <WithStyles(ForwardRef(IconButton))
+        aria-label="open drawer"
+        className="makeStyles-menuButton-5"
+        color="inherit"
+        edge="start"
+        onClick={[Function]}
+      >
+        <Memo(ForwardRef(MenuIcon)) />
+      </WithStyles(ForwardRef(IconButton))>
+      <WithStyles(ForwardRef(Typography))
+        noWrap={true}
+        onClick={[Function]}
+        style={
+          Object {
+            "color": "white",
+            "cursor": "pointer",
+            "fontFamily": "Righteous, cursive",
+          }
+        }
+        variant="h4"
+      >
+        <WithStyles(ForwardRef(Button))
+          style={
+            Object {
+              "backgroundColor": "#d1a515",
+              "borderRadius": "99999999px",
+            }
+          }
+        >
+          <img
+            alt="not available"
+            src="favicon.ico"
+            style={
+              Object {
+                "height": "35px",
+                "width": "35px",
+              }
+            }
+          />
+        </WithStyles(ForwardRef(Button))>
+          Insurance Bazaar
+      </WithStyles(ForwardRef(Typography))>
+    </WithStyles(ForwardRef(Toolbar))>
+  </WithStyles(ForwardRef(AppBar))>
+  <WithStyles(ForwardRef(Drawer))
+    className="makeStyles-drawer-7 makeStyles-drawerClose-9"
+    classes={
+      Object {
+        "paper": "makeStyles-drawerClose-9",
+      }
+    }
+    variant="permanent"
+  >
+    <div
+      className="makeStyles-toolbar-10"
+    >
+      <WithStyles(ForwardRef(IconButton))
+        onClick={[Function]}
+      >
+        <Memo(ForwardRef(ChevronLeftIcon)) />
+      </WithStyles(ForwardRef(IconButton))>
+    </div>
+    <WithStyles(ForwardRef(Divider)) />
+    <WithStyles(ForwardRef(List))>
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        key="Home"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemIcon))>
+          <Memo(ForwardRef(HomeIcon)) />
+        </WithStyles(ForwardRef(ListItemIcon))>
+        <WithStyles(ForwardRef(ListItemText))
+          primary="Home"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        key="Services"
+      >
+        <WithStyles(ForwardRef(ListItemIcon))>
+          <Memo(ForwardRef(BusinessIcon)) />
+        </WithStyles(ForwardRef(ListItemIcon))>
+        <WithStyles(ForwardRef(ListItemText))
+          primary="Services"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        key="Partners"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemIcon))>
+          <Memo(ForwardRef(LoyaltyIcon)) />
+        </WithStyles(ForwardRef(ListItemIcon))>
+        <WithStyles(ForwardRef(ListItemText))
+          primary="Partners"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        key="Products"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemIcon))>
+          <Memo(ForwardRef(ShoppingBasketIcon)) />
+        </WithStyles(ForwardRef(ListItemIcon))>
+        <WithStyles(ForwardRef(ListItemText))
+          primary="Products"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        key="About Us"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemIcon))>
+          <Memo(ForwardRef(InfoIcon)) />
+        </WithStyles(ForwardRef(ListItemIcon))>
+        <WithStyles(ForwardRef(ListItemText))
+          primary="About Us"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </WithStyles(ForwardRef(List))>
+  </WithStyles(ForwardRef(Drawer))>
+  <main
+    className="makeStyles-content-11"
+  >
+    <div
+      className="makeStyles-toolbar-10"
+    />
+    <RenderCard
+      locationData={
+        Object {
+          "location": Object {
+            "state": Object {
+              "category": "Motor Insurance",
+              "product": "Car Insurance",
+            },
+          },
+        }
+      }
+    />
+  </main>
+</div>
+`;

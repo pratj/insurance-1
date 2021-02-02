@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RenderForm snapshot 1`] = `
+<WithStyles(ForwardRef(Container))
+  className="renderForm"
+  component="main"
+  data-test="renderForm"
+  maxWidth="xs"
+>
+  <div
+    className="makeStyles-paper-1"
+  >
+    <WithStyles(ForwardRef(Typography))
+      variant="subtitle1"
+    >
+      Provide the following details
+    </WithStyles(ForwardRef(Typography))>
+    <form
+      className="makeStyles-form-2"
+      onSubmit={[Function]}
+    >
+      <div
+        key="fullName"
+      >
+        <WithStyles(ForwardRef(TextField))
+          fullWidth={true}
+          id="fullName"
+          inputRef={[Function]}
+          label="Full Name"
+          margin="normal"
+          name="fullName"
+          placeholder="Enter Full Name"
+          type="text"
+          variant="outlined"
+        />
+      </div>
+      <WithStyles(ForwardRef(FormControlLabel))
+        control={
+          <WithStyles(ForwardRef(Switch))
+            inputRef={[Function]}
+            name="sendUpdates"
+          />
+        }
+        label="Get updates on Email"
+      />
+      <WithStyles(ForwardRef(Button))
+        className="makeStyles-submit-3"
+        color="primary"
+        fullWidth={true}
+        style={
+          Object {
+            "borderRadius": "15px",
+          }
+        }
+        type="submit"
+        variant="contained"
+      >
+        Submit
+      </WithStyles(ForwardRef(Button))>
+    </form>
+  </div>
+</WithStyles(ForwardRef(Container))>
+`;

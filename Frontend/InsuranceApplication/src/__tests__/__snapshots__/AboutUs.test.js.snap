@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AboutUs snapshot 1`] = `
+<div
+  className="aboutUs"
+  data-test="aboutUs"
+>
+  <h1
+    style={
+      Object {
+        "textAlign": "center",
+      }
+    }
+  >
+    About Us
+  </h1>
+  <marquee
+    direction="left"
+    height="100px"
+    width="60%"
+  >
+    Prateek Param Rashwin
+  </marquee>
+</div>
+`;

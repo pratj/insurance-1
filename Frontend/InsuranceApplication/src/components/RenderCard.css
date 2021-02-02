@@ -1,0 +1,39 @@
+.dialogTitle{
+    display: flex;
+}
+
+.dialogTitle__description{
+    margin: auto;
+}
+
+.dialogTitle__close :hover{
+    background-color: #e8f5fe;
+    border-radius: 30px;
+    transition: color 100ms ease-out;
+}
+
+.dialogTitle__close > .MuiSvgIcon-root{
+    padding: 5px;
+    cursor: pointer;
+}
+
+.card{
+    transition: transform 330ms ease-in-out;
+    text-align: center;
+}
+
+.card:hover  {
+    
+    box-shadow: 0 0 5em rgba(77, 72, 72, 0.4);
+    transform: translateY(5px);
+    background-color: #FFD700;
+    color: #fff;
+    /* backdrop-filter: blur(10px); */
+    }
+.stripebutton:hover{
+    color: #fbfbfb;
+    box-shadow: 0 0 5em rgba(0, 0, 0, 0.2   ); 
+    
+    
+     backdrop-filter: blur(10px);
+}
