@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 
-
+@Repository
 open class  Dao(private var mongoTemplate: MongoTemplate) {
 
     fun insert(dbName: String, doc: Document) {

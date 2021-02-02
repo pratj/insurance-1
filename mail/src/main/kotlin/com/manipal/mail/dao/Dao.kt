@@ -2,7 +2,9 @@ package com.manipal.mail.dao
 import org.bson.Document
 import org.bson.conversions.Bson
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.stereotype.Repository
 
+@Repository
 class Dao(private var mongoTemplate: MongoTemplate) {
     fun insert(dbName: String, doc: Document) {
         println(doc.toString())
