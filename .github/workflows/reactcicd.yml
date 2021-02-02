@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [ main ]
 
+defaults:
+  run:
+    working-directory: Frontend/InsuranceApplication
 
 jobs:
   build:
@@ -45,5 +48,5 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
       - name: build docker 
         run: |
-          docker build "$GITHUB_WORKSPACE/Frontend/InsuranceApplication" -f  "Dockerfile" 
+          docker build "$GITHUB_WORKSPACE" -f  "Dockerfile" 
     #       docker push pratj97/insurance-backend:${{ github.sha }}
