@@ -50,6 +50,6 @@ jobs:
           image: pratj97/insurance-frontend
           tags: v1, latest
           registry: registry-url.io
-          dockerfile: ./Frontend/InsuranceApplication/Dockerfile.ci
+          dockerfile: Dockerfile.ci
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
