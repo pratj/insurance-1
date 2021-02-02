@@ -45,12 +45,13 @@ jobs:
       env:
         DOCKER_USER: ${{secrets.DOCKER_USERNAME}} 
         DOCKER_PASSWORD:  ${{secrets.DOCKER_PASSWORD}}
+        REPO: ${{secrets.REPO}} 
       run: |
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
     - name: build docker 
       run: |
-        docker build "$GITHUB_WORKSPACE" -f  "Dockerfile" -t pratj97/insurance-backend:${{ github.sha }}
-        docker push pratj97/insurance-backend:${{ github.sha }}
+        docker build "$GITHUB_WORKSPACE/backend" -f  "backend/Dockerfile" -t $REPO:${{ github.sha }}
+        docker push $REPO:${{ github.sha }}
       
   
 
