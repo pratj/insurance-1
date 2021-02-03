@@ -25,5 +25,5 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
       - name: build docker and push (Python script)
         run: |
-          docker build "$GITHUB_WORKSPACE/python" -f  "Dockerfile" pratj97/insurance-suggestor:${{ github.sha }}
+          docker build "$GITHUB_WORKSPACE/python" -f  "Dockerfile" -t pratj97/insurance-suggestor:${{ github.sha }}
           docker push pratj97/insurance-suggestor:${{ github.sha }}
