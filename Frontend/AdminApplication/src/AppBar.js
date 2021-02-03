@@ -173,6 +173,11 @@ export default function MenuAppBar() {
                   />{" "}
                   View Map Cluster
                 </MenuItem>
+                <MenuItem>
+                  <Link to="/signup" style={{ color: 'inherit', textDecoration: 'inherit'}}>
+                    Make a new Account
+                  </Link>
+                </MenuItem>
                 <MenuItem onClick={handleLogOut}>
                   <ExitToAppRoundedIcon />
                   Log Out
