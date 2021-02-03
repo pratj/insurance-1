@@ -48,5 +48,5 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
       - name: build docker 
         run: |
-          docker build "$GITHUB_WORKSPACE/Frontend/InsuranceApplication" -f  "Dockerfile" -t pratj97/insurance-frontend:${{ github.sha }}
+          docker build "$GITHUB_WORKSPACE/Frontend/InsuranceApplication" -f  "Dockerfile" -t pratj97/insurance-frontend:${{ github.sha }} --build-arg REACT_APP_STRIPE_KEY_ARG=pk_test_51I9lSYCARmi7rnrvTAO95tCgOapzBC3h6NODXGtkJUbmwL1IPZMFOmGYfSrxseOkuGxTsDMJFi0ELtRfoQ3Feegu00D77Vaz3g --build-arg REACT_APP_BASE_URL_ARG=http://ibazaar.com/backend .
           docker push pratj97/insurance-frontend:${{ github.sha }}
