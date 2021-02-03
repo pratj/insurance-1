@@ -13,7 +13,7 @@ defaults:
 jobs:
   docker-push:
     runs-on: ubuntu-latest
-#     needs: [build]
+
     steps:
       - uses: actions/checkout@v2
       - name: docker login
@@ -23,6 +23,7 @@ jobs:
           REPO: ${{secrets.REPO}}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-      - name: build docker
+      - name: build docker and push (Python script)
         run: |
-          docker build "$GITHUB_WORKSPACE/python" -f  "Dockerfile" 
+          docker build "$GITHUB_WORKSPACE/python" -f  "Dockerfile" pratj97/insurance-suggestor:${{ github.sha }}
+          docker push pratj97/insurance-suggestor:${{ github.sha }}
