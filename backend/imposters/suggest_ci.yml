@@ -1,0 +1,30 @@
+name: suggestor_ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+defaults:
+  run:
+    working-directory: python
+
+jobs:
+  docker-push:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - name: docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD:  ${{secrets.DOCKER_PASSWORD}}
+          REPO: ${{secrets.REPO}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+      - name: build docker
+        run: |
+          docker build "$GITHUB_WORKSPACE/python" -f  "Dockerfile" -t pratj97/insurance-suggestor:${{ github.sha }}
+          docker push pratj97/insurance-suggestor:${{ github.sha }}
+
