@@ -21,7 +21,7 @@ const HtmlTooltip = withStyles((theme) => ({
 }))(Tooltip);
 
 function Map() {
-  const url = "http://localhost:9090/api/map/location";
+  const url = "http://ibazzar.com/backend/api/map/location";
   const { data, error } = useSwr(url, { fetcher });
   const insurances = data && !error ? data.slice(0, 200) : [];
 
