@@ -1,13 +1,13 @@
 import { Grid, Typography } from '@material-ui/core'
 import React, {useState, useEffect} from 'react'
 import { Carousel } from 'react-responsive-carousel'
-import axios from "axios";
+import  Requests  from '../Service/Requests';
 function Products() {
 
     const [products, setProducts] = useState([])
 
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BASE_URL}/api/categories`).then((response) => {
+        Requests.getCategories().then((response) => {
             console.log(response.data);
             setProducts(response.data);
           });

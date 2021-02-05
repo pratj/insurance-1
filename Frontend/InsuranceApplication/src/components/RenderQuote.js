@@ -16,7 +16,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import axios from "axios";
+import Requests from "../Service/Requests";
 import routeConstants from "../shared/constants/routes";
 
 const { HOME } = routeConstants;
@@ -78,9 +78,7 @@ function RenderQuote({ locationData }) {
       userLocation: quoteResponse.userLocation,
     };
     console.log(`${process.env.REACT_APP_STRIPE_KEY}/api/payment`)
-    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/charge`, {
-      data,
-    });
+    const response = await Requests.postPaymentData(data);
     const { status } = response.data;
 
     if (status === "succeeded") {

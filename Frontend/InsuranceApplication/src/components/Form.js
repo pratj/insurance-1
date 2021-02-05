@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react'
 import RenderForm from './RenderForm';
-import axios from 'axios'
 import { useHistory } from "react-router";
 import useGeoLocation from '../geolocation/useGeoLocation'
 import routeConstants from "../shared/constants/routes";
-
+import Requests from "../Service/Requests";
 const { QUOTE } = routeConstants;
 const Form = ({cardInfo, setOpenPopup}) => {
         
@@ -17,7 +16,8 @@ const Form = ({cardInfo, setOpenPopup}) => {
       const userLocation= geoLocation.loaded ? (geoLocation): "Location data not available yet."
       const finalData = {category: cardInfo.category, product: cardInfo.product, formData: data, userLocation:userLocation}
       console.log(finalData)
-      axios.post(`${process.env.REACT_APP_BASE_URL}/api/response`, finalData).then((response) => {
+      Requests.postFromData(finalData).then((response) => {
+        
         const quoteData={category: cardInfo.category,product: cardInfo.product, quoteData: response.data, userLocation:userLocation} 
         redirectToPath(quoteData)
       })
@@ -25,11 +25,11 @@ const Form = ({cardInfo, setOpenPopup}) => {
     }
 
     function redirectToPath(quoteData) {
-      history.push(QUOTE.rote,{quoteData: JSON.stringify(quoteData)})
+      history.push((QUOTE.route),{quoteData: JSON.stringify(quoteData)})
     }
   
     useEffect(() => {
-        axios.get(`${process.env.REACT_APP_BASE_URL}/api/config/category/${cardInfo.category}/product/${cardInfo.product}`).then((response) => {
+        Requests.getFormFields(cardInfo.category,cardInfo.product).then((response) => {
             setFormFields(response.data[0].fields)
         })    
     }, [cardInfo.category, cardInfo.product])

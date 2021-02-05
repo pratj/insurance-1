@@ -12,13 +12,12 @@ import {
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import axios from "axios";
 import CloseIcon from "@material-ui/icons/Close";
 import "./RenderCard.css";
 import Form from "./Form";
 import { useHistory } from "react-router";
 import routeConstants from "../shared/constants/routes";
-
+import Requests from "../Service/Requests";
 const { SUGGESTIONS } = routeConstants;
 
 const useStyles = makeStyles((theme) => ({
@@ -56,7 +55,7 @@ function RenderCard() {
 
   useEffect(() => {
     console.log(`${process.env.REACT_APP_BASE_URL}/api/categories`)
-    axios.get(`${process.env.REACT_APP_BASE_URL}/api/categories`).then((response) => {
+    Requests.getCategories().then((response) => {
       console.log(response.data);
       setCardConfig(response.data);
     });
