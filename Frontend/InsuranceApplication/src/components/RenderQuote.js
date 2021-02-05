@@ -16,8 +16,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
-import axios from "axios";
+import Requests from "../Service/Requests";
+import routeConstants from "../shared/constants/routes";
 
+const { HOME } = routeConstants;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +54,7 @@ function RenderQuote({ locationData }) {
   };
   const history = useHistory();
   function handleMore() {
-    history.push("/");
+    history.push(HOME.route);
   }
   const classes = useStyles();
   const quoteResponse = JSON.parse(locationData.location.state.quoteData);
@@ -76,9 +78,7 @@ function RenderQuote({ locationData }) {
       userLocation: quoteResponse.userLocation,
     };
     console.log(`${process.env.REACT_APP_STRIPE_KEY}/api/payment`)
-    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/api/charge`, {
-      data,
-    });
+    const response = await Requests.postPaymentData(data);
     const { status } = response.data;
 
     if (status === "succeeded") {

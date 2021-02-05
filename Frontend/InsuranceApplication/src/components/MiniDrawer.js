@@ -1,49 +1,51 @@
-import React from 'react';
-import clsx from 'clsx';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import HomeIcon from '@material-ui/icons/Home';
-import BusinessIcon from '@material-ui/icons/Business';
-import LoyaltyIcon from '@material-ui/icons/Loyalty';
-import InfoIcon from '@material-ui/icons/Info';
+import React from "react";
+import clsx from "clsx";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import List from "@material-ui/core/List";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
+import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
+import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
+import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import HomeIcon from "@material-ui/icons/Home";
+import BusinessIcon from "@material-ui/icons/Business";
+import LoyaltyIcon from "@material-ui/icons/Loyalty";
+import InfoIcon from "@material-ui/icons/Info";
 import { useHistory } from "react-router";
-import ShoppingBasketIcon from '@material-ui/icons/ShoppingBasket';
-import "./MiniDrawer.css"
-import { Button } from '@material-ui/core';
+import ShoppingBasketIcon from "@material-ui/icons/ShoppingBasket";
+import "./MiniDrawer.css";
+import { Button } from "@material-ui/core";
+import routeConstants from "../shared/constants/routes";
 
+const { HOME, PARTNERS, PRODUCTS, ABOUT } = routeConstants;
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
+    display: "flex",
   },
   footer: {
     width: 800,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
+      duration: theme.transitions.duration.leavingScreen,
     }),
   },
   appBarShift: {
     marginLeft: drawerWidth,
     width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+    transition: theme.transitions.create(["width", "margin"], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
@@ -52,34 +54,34 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 36,
   },
   hide: {
-    display: 'none',
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: 'nowrap',
+    whiteSpace: "nowrap",
   },
   drawerOpen: {
     width: drawerWidth,
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    transition: theme.transitions.create('width', {
+    transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
     }),
-    overflowX: 'hidden',
+    overflowX: "hidden",
     width: theme.spacing(7) + 1,
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up("sm")]: {
       width: theme.spacing(9) + 1,
     },
   },
   toolbar: {
-    display: 'flex',
-    justifyContent: 'flex-end',
+    display: "flex",
+    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -90,8 +92,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MiniDrawer({RenderComponent, location}) {
-
+export default function MiniDrawer({ RenderComponent, location }) {
   const classes = useStyles();
   const theme = useTheme();
   const history = useHistory();
@@ -109,30 +110,30 @@ export default function MiniDrawer({RenderComponent, location}) {
   const itemsList = [
     {
       text: "Home",
-      icon: <HomeIcon/>,
-      onClick: () => history.push("/")
+      icon: <HomeIcon />,
+      onClick: () => history.push(HOME.route),
     },
     {
       text: "Services",
-      icon: <BusinessIcon/>,
+      icon: <BusinessIcon />,
     },
     {
       text: "Partners",
-      icon: <LoyaltyIcon/>,
-      onClick: () => history.push("/partners")
+      icon: <LoyaltyIcon />,
+      onClick: () => history.push(PARTNERS.route),
     },
     {
       text: "Products",
-      icon: <ShoppingBasketIcon/>,
-      onClick: () => history.push("/products")
+      icon: <ShoppingBasketIcon />,
+      onClick: () => history.push(PRODUCTS.route),
     },
     {
       text: "About Us",
-      icon: <InfoIcon/>,
-      onClick: () => history.push("/aboutus")
-    }
-  ]
-  
+      icon: <InfoIcon />,
+      onClick: () => history.push(ABOUT.route),
+    },
+  ];
+
   return (
     <div className={classes.root} data-test="miniDrawer">
       <CssBaseline />
@@ -155,8 +156,25 @@ export default function MiniDrawer({RenderComponent, location}) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h4" noWrap style={{cursor: 'pointer', fontFamily: 'Righteous, cursive',color: 'white'}} onClick={() => history.push("/")}>
-            <Button style={{borderRadius:"99999999px", backgroundColor:"#d1a515"}}><img src="favicon.ico" style={{width: "35px", height:"35px" }} alt="not available"/></Button>
+          <Typography
+            variant="h4"
+            noWrap
+            style={{
+              cursor: "pointer",
+              fontFamily: "Righteous, cursive",
+              color: "white",
+            }}
+            onClick={() => history.push("/")}
+          >
+            <Button
+              style={{ borderRadius: "99999999px", backgroundColor: "#d1a515" }}
+            >
+              <img
+                src="favicon.ico"
+                style={{ width: "35px", height: "35px" }}
+                alt="not available"
+              />
+            </Button>
             &nbsp;&nbsp;Insurance Bazaar
           </Typography>
         </Toolbar>
@@ -176,26 +194,34 @@ export default function MiniDrawer({RenderComponent, location}) {
       >
         <div className={classes.toolbar}>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            {theme.direction === "rtl" ? (
+              <ChevronRightIcon />
+            ) : (
+              <ChevronLeftIcon />
+            )}
           </IconButton>
         </div>
         <Divider />
         <List>
           {itemsList.map((item) => {
-            const {text, icon, onClick} = item
+            const { text, icon, onClick } = item;
             return (
               <ListItem button key={text} onClick={onClick}>
                 {icon && <ListItemIcon>{icon}</ListItemIcon>}
-                <ListItemText primary={text}/>
+                <ListItemText primary={text} />
               </ListItem>
-            )
+            );
           })}
         </List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.toolbar} />
-        {typeof location.location.state === 'undefined' ? <RenderComponent/> : <RenderComponent locationData={location}/>}
-      </main> 
+        {typeof location.location.state === "undefined" ? (
+          <RenderComponent />
+        ) : (
+          <RenderComponent locationData={location} />
+        )}
+      </main>
     </div>
   );
 }
