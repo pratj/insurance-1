@@ -18,3 +18,7 @@ spec:
           backend:
             serviceName: insurance-backend
             servicePort: 9090
+        - path: /admin/?(.*)
+          backend:
+            serviceName: insurance-frontend_admin
+            servicePort: 4000
