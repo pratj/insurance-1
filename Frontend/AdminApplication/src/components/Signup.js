@@ -70,7 +70,7 @@ export default function Signup() {
       setError("")
       setLoading(true)
       await signup(data.emailId, data.password)
-      history.push("/")
+      history.push("/home")
     } catch {
       setError("Failed to create an account")
       handleClickOpen()

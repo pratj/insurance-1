@@ -84,7 +84,7 @@ function BarChart2() {
     }
     
     useEffect(() => {
-      axios.get("http://localhost:9090/api/category/partner/payment/count").then((response) => {
+      axios.get("http://ibazzar.com/backend/api/category/partner/payment/count").then((response) => {
         setData(response.data)
       })
     }, [])

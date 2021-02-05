@@ -25,7 +25,7 @@ function DoughnutChart1() {
         let partners = []
         let partnersCount = []
 
-        axios.get("http://localhost:9090/api/partner/category/count").then((response) => {
+        axios.get("http://ibazzar.com/backend/api/partner/category/count").then((response) => {
 
             randomColorGenerate(response.data.length)
 

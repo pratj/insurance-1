@@ -20,7 +20,7 @@ import ExitToAppRoundedIcon from "@material-ui/icons/ExitToApp";
 import MapRoundedIcon from "@material-ui/icons/MapRounded";
 import "./AppBar.css";
 
-const productWebsiteUrl = "http://localhost:3000/";
+const productWebsiteUrl = `http://ibazzar.com/backend`;
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -172,6 +172,11 @@ export default function MenuAppBar() {
                     style={{ width: "30px", height: "30px" }}
                   />{" "}
                   View Map Cluster
+                </MenuItem>
+                <MenuItem>
+                  <Link to="/signup" style={{ color: 'inherit', textDecoration: 'inherit'}}>
+                    Make a new Account
+                  </Link>
                 </MenuItem>
                 <MenuItem onClick={handleLogOut}>
                   <ExitToAppRoundedIcon />
