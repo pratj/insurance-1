@@ -17,6 +17,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import "./RenderCard.css";
 import Form from "./Form";
 import { useHistory } from "react-router";
+import routeConstants from "../shared/constants/routes";
+
+const { SUGGESTIONS } = routeConstants;
 
 const useStyles = makeStyles((theme) => ({
   dialogWrapper: {
@@ -63,7 +66,7 @@ function RenderCard() {
   const history = useHistory();
 
   function handleSuggestions() {
-    history.push("/suggestions");
+    history.push(SUGGESTIONS.route);
   }
 
   const renderCard = (card, index) => {

@@ -17,7 +17,9 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Slide from "@material-ui/core/Slide";
 import axios from "axios";
+import routeConstants from "../shared/constants/routes";
 
+const { HOME } = routeConstants;
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -52,7 +54,7 @@ function RenderQuote({ locationData }) {
   };
   const history = useHistory();
   function handleMore() {
-    history.push("/");
+    history.push(HOME.route);
   }
   const classes = useStyles();
   const quoteResponse = JSON.parse(locationData.location.state.quoteData);

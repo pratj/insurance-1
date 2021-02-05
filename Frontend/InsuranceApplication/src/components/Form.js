@@ -3,7 +3,9 @@ import RenderForm from './RenderForm';
 import axios from 'axios'
 import { useHistory } from "react-router";
 import useGeoLocation from '../geolocation/useGeoLocation'
+import routeConstants from "../shared/constants/routes";
 
+const { QUOTE } = routeConstants;
 const Form = ({cardInfo, setOpenPopup}) => {
         
     const [formFields, setFormFields] = useState()
@@ -23,7 +25,7 @@ const Form = ({cardInfo, setOpenPopup}) => {
     }
 
     function redirectToPath(quoteData) {
-      history.push("/quote", {quoteData: JSON.stringify(quoteData)})
+      history.push(QUOTE.rote,{quoteData: JSON.stringify(quoteData)})
     }
   
     useEffect(() => {
