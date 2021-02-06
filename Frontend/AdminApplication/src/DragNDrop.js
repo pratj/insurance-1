@@ -41,6 +41,7 @@ const useStylesAccordion = makeStyles((theme) => ({
 }));
 
 toast.configure();
+
 function DragNDrop() {
   const classes = useStyles();
   const classesAccordion = useStylesAccordion();
