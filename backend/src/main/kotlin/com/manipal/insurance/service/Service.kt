@@ -250,7 +250,11 @@ class Service {
         val query = Document()
         query["category"] = category
         query["product"] = product
-        return dao?.find("formConfig", query)
+        var result=dao?.find("formConfig", query)
+        if(result==null)
+            return ArrayList<Document>()
+        else
+            return result
 
     }
 

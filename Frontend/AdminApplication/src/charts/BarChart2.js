@@ -76,27 +76,20 @@ function BarChart2() {
         },
       ],
     },
-  };
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:9090/api/category/partner/payment/count")
-      .then((response) => {
-        setData(response.data);
-      });
-  }, []);
-
-  return (
-    <Grid container style={{ display: "flex" }}>
-      {/* {typeof data !== undefined && data.map((data, index) => chart(data, index))} */}
-      {data.length !== 0 ? (
-        data.map((data, index) => chart(data, index))
-      ) : (
-        <span>No purchases made yet</span>
-      )}
-      {/* {dummyData.map((data, index) => chart(data, index))} */}
-    </Grid>
-  );
+  };    
+    useEffect(() => {
+      axios.get("http://ibazzar.com/backend/api/category/partner/payment/count").then((response) => {
+        setData(response.data)
+      })
+    }, [])
+    
+    return (
+        <Grid container style={{display: 'flex'}}>
+          {/* {typeof data !== undefined && data.map((data, index) => chart(data, index))} */}
+          {data.length!==0 ? data.map((data, index) => chart(data, index)):<span>No purchases made yet</span>}
+          {/* {dummyData.map((data, index) => chart(data, index))} */}
+        </Grid>
+    )
 }
 
 export default BarChart2;

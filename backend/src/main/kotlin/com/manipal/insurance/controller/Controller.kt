@@ -5,31 +5,32 @@ import com.manipal.insurance.dao.Dao
 import com.manipal.insurance.model.ChargeRequest
 import com.manipal.insurance.service.Service
 import com.manipal.insurance.service.StripeService
+import com.mongodb.MongoClientURI
+import com.mongodb.client.MongoClient
+import com.mongodb.client.MongoDatabase
 import com.stripe.exception.StripeException
 import org.bson.Document
-import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.mongodb.MongoDatabaseFactory
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import kotlin.collections.ArrayList
-
-
 @RestController
 @RequestMapping("/api")
 class Controller {
-    @Autowired
-    var mongoTemplate: MongoTemplate? = null
-    @Autowired
+    var mongoClient:MongoClient?=null
+
+    var mongoTemplate: MongoTemplate?=null
+            @Autowired
     var service: Service? = null
     var dao: Dao? = null
+
 
     @Autowired
     private val paymentsService: StripeService? = null
@@ -38,7 +39,6 @@ class Controller {
     fun paymentPartnerCount(): MutableList<Document>? {
         return service?.partnerPaymentCount()
     }
-
     @PostMapping("/charge")
     @Throws(StripeException::class)
     fun charge(@RequestBody data: String, model: Model): ResponseEntity<String?> {

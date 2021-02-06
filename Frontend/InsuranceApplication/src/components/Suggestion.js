@@ -1,21 +1,16 @@
 import {
-  Button,
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
-  CardMedia,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
   Grid,
   Typography,
 } from "@material-ui/core";
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import axios from "axios";
+
 import loader from "../video/video.mp4";
+import Requests from "../Service/Requests";
+
 function Suggestion() {
   return (
     <div>
@@ -109,14 +104,12 @@ function RenderCard() {
   };
 
   useEffect(() => {
-    axios
-      .get(`${process.env.REACT_APP_BASE_URL}/api/category/request/count`)
-      .then((response) => {
-        response.data.sort(GetSortOrder("count"));
-        const temp = response.data.slice(0, 3);
-        console.log(temp);
-        setCardConfig(temp);
-      });
+    Requests.getCategoryRequestCount().then((response) => {
+      response.data.sort(GetSortOrder("count"));
+      const temp = response.data.slice(0, 3);
+      console.log(temp);
+      setCardConfig(temp);
+    });
   }, []);
 
   const classes = useStyles();

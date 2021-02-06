@@ -9,6 +9,6 @@ RUN mvn -B -f pom.xml clean package -DskipTests
 FROM openjdk:11.0-slim
 COPY --from=build /workspace/target/*.jar app.jar
 CMD ["mkdir","src"]
-COPY ./src/key.txt src/key.txt
+COPY src/key.txt src/key.txt
 ENTRYPOINT ["java","-jar","/app.jar"]
 

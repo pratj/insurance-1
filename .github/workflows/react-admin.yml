@@ -1,5 +1,4 @@
-
-name: React CI/CD
+name: React Admin CI/CD
 
 on:
   push:
@@ -9,7 +8,7 @@ on:
 
 defaults:
   run:
-    working-directory: Frontend/InsuranceApplication
+    working-directory: Frontend/AdminApplication
 
 jobs:
   build:
@@ -35,10 +34,6 @@ jobs:
       needs: [build]
       steps:
       - uses: actions/checkout@v2
-#       - name: Set up JDK 11
-#         uses: actions/setup-java@v1
-#         with:
-#           java-version: 11.0.4
       - name: docker login
         env:
           DOCKER_USER: ${{secrets.DOCKER_USERNAME}} 
@@ -48,5 +43,5 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD  
       - name: build docker 
         run: |
-          docker build "$GITHUB_WORKSPACE/Frontend/InsuranceApplication" -f  "Dockerfile" -t pratj97/insurance-frontend:${{ github.sha }} --build-arg REACT_APP_STRIPE_KEY_ARG=pk_test_51I9lSYCARmi7rnrvTAO95tCgOapzBC3h6NODXGtkJUbmwL1IPZMFOmGYfSrxseOkuGxTsDMJFi0ELtRfoQ3Feegu00D77Vaz3g --build-arg REACT_APP_BASE_URL_ARG=http://ibazaar.com/backend
-          docker push pratj97/insurance-frontend:${{ github.sha }}
+          docker build "$GITHUB_WORKSPACE/Frontend/AdminApplication" -f  "Dockerfile" -t pratj97/insurance-frontend_admin:${{ github.sha }} --build-arg REACT_APP_FIREBASE_API_KEY_ARG=AIzaSyAYLWhIsLF2qr58d3VzagjmsexuXSihpFw --build-arg REACT_APP_FIREBASE_API_DOMAIN_ARG=insurance-development-b3367.firebaseapp.com --build-arg REACT_APP_FIREBASE_API_PROJECT_ID_ARG=insurance-development-b3367 --build-arg REACT_APP_FIREBASE_API_STORAGE_BUCKET_ARG=insurance-development-b3367.appspot.com --build-arg REACT_APP_FIREBASE_API_MESSAGING_SENDER_ID_ARG=386675545090 --build-arg REACT_APP_FIREBASE_APP_ID_ARG=1:386675545090:web:da0e0e908650ab9730431b --build-arg REACT_APP_GOOGLE_MAP_KEY_ARG=AIzaSyC6bAuNo7TzqS9ys96jDzPB_1axfqWTONM
+          docker push pratj97/insurance-frontend_admin:${{ github.sha }}

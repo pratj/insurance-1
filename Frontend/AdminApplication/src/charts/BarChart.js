@@ -26,7 +26,7 @@ function BarChart() {
     let partnerCount = [];
 
     axios
-      .get("http://localhost:9090/api/category/partner/count")
+      .get("http://ibazzar.com/backend/api/category/partner/count")
       .then((response) => {
         fillColor(response.data.length);
 

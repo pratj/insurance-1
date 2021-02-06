@@ -22,11 +22,8 @@ function DoughnutChart2() {
     let insurances = [];
     let soldInsurances = [];
 
-    axios
-      .get("http://localhost:9090/api/category/request/count")
-      .then((response) => {
+        axios.get("http://ibazzar.com/backend/api/category/request/count").then((response) => {
         randomColorGenerate(response.data.length);
-
         for (let dataObj of response.data) {
           insurances.push(dataObj.category);
           soldInsurances.push(dataObj.count);

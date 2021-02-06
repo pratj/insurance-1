@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: demo
+  name: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: demo
+    spec:
+      containers:
+      - image: pratj97/insurance-frontend_admin
+        name: insurance-frontend-admin-ll9vb
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: insurance-frontend_admin
+  name: insurance-frontend_admin
+spec:
+  ports:
+  - name: http
+    port: 4000
+    targetPort: 80
+  selector:
+    app: insurance-frontend_admin
+  type: NodePort
