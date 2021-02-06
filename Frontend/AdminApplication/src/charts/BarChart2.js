@@ -1,88 +1,82 @@
-import React, { useState, useEffect } from 'react'
-import { Bar } from 'react-chartjs-2'
-import axios from 'axios'
-import { Grid } from '@material-ui/core'
-
+import React, { useState, useEffect } from "react";
+import { Bar } from "react-chartjs-2";
+import axios from "axios";
+import { Grid } from "@material-ui/core";
 
 function BarChart2() {
+  var chartData;
+  var rgb = [];
+  var borderColor = [];
+  var backgroundColor = [];
+  var maxTick = 6;
+  const [data, setData] = useState([]);
 
-    var chartData
-    var rgb = []
-    var borderColor = []
-    var backgroundColor = []
-    var maxTick = 6
-    const [ data, setData ] = useState([])
-
-    const randomColorGenerate = (responseLength) => {
-      for(let i = 0; i < 3; i++){
-        rgb.push(Math.floor(Math.random() * 255))
-      }
-      for(let i = 0; i < responseLength; i++){
-        borderColor.push('rgb('+rgb.join(',')+')')
-        backgroundColor.push('rgb('+rgb.join(',')+')')
-      }
-      rgb = []
-      
+  const randomColorGenerate = (responseLength) => {
+    for (let i = 0; i < 3; i++) {
+      rgb.push(Math.floor(Math.random() * 255));
     }
-
-    const barChart = (index) => {
-      return (
-        <Grid item xs={12} sm={4} key={index}>
-            <Bar data={chartData} options={options}/>
-        </Grid>
-      )
+    for (let i = 0; i < responseLength; i++) {
+      borderColor.push("rgb(" + rgb.join(",") + ")");
+      backgroundColor.push("rgb(" + rgb.join(",") + ")");
     }
+    rgb = [];
+  };
 
-    const chart = (data, index) => {
+  const barChart = (index) => {
+    return (
+      <Grid item xs={12} sm={4} key={index}>
+        <Bar data={chartData} options={options} />
+      </Grid>
+    );
+  };
 
-      let partners = []
-      let boughtCount = []
+  const chart = (data, index) => {
+    let partners = [];
+    let boughtCount = [];
 
-      
-      randomColorGenerate(data.partners.length)
-      
-      for(let dataObj of data.partners){
-        //console.log(dataObj)
-        partners.push(dataObj.partner)
-        boughtCount.push(dataObj.count)
-      }
-      chartData = {
-        labels: partners,
-        datasets: [
-          {
-            label: data.category,
-            data: boughtCount,
-            borderColor: borderColor,
-            backgroundColor: backgroundColor
-          }
-        ]
-      }
+    randomColorGenerate(data.partners.length);
 
-      maxTick = Math.max(...boughtCount) + 3
-      
-      borderColor = []
-      backgroundColor = []
-      return barChart(index)
+    for (let dataObj of data.partners) {
+      //console.log(dataObj)
+      partners.push(dataObj.partner);
+      boughtCount.push(dataObj.count);
     }
-    
-    var options = {
-      title: {
-        display: true,
-        text: 'Partners bought in each category'
-      },
-      scales: {
-        yAxes: [
-          {
-            ticks: {
-              min: 0,
-              max: maxTick,
-              stepSize: 1
-            }
-          }
-        ]
-      }
-    }
-    
+    chartData = {
+      labels: partners,
+      datasets: [
+        {
+          label: data.category,
+          data: boughtCount,
+          borderColor: borderColor,
+          backgroundColor: backgroundColor,
+        },
+      ],
+    };
+
+    maxTick = Math.max(...boughtCount) + 3;
+
+    borderColor = [];
+    backgroundColor = [];
+    return barChart(index);
+  };
+
+  var options = {
+    title: {
+      display: true,
+      text: "Partners bought in each category",
+    },
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            min: 0,
+            max: maxTick,
+            stepSize: 1,
+          },
+        },
+      ],
+    },
+  };    
     useEffect(() => {
       axios.get("http://ibazzar.com/backend/api/category/partner/payment/count").then((response) => {
         setData(response.data)
@@ -98,4 +92,4 @@ function BarChart2() {
     )
 }
 
-export default BarChart2
+export default BarChart2;
