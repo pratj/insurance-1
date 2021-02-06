@@ -19,7 +19,9 @@ import MultilineChartIcon from "@material-ui/icons/MultilineChart";
 import ExitToAppRoundedIcon from "@material-ui/icons/ExitToApp";
 import MapRoundedIcon from "@material-ui/icons/MapRounded";
 import "./AppBar.css";
+import routeConstants from "./shared/constants/routes";
 
+const { LOGIN, ANALYTICS, MAP, MAPCLUSTER, HOME } = routeConstants;
 const productWebsiteUrl = `http://ibazzar.com/backend`;
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -60,23 +62,23 @@ export default function MenuAppBar() {
 
     try {
       await logout();
-      history.push("/login");
+      history.push(LOGIN.route);
     } catch {
       setError("Failed to log out");
     }
   }
   const handleAnalytics = () => {
     setAnchorEl(null);
-    history.push("/analytics");
+    history.push(ANALYTICS.route);
   };
   const handleMap = () => {
-    history.push("/map");
+    history.push(MAP.route);
   };
   const handleMapCluster = () => {
-    history.push("/mapcluster");
+    history.push(MAPCLUSTER.route);
   };
   const handleHome = () => {
-    history.push("/home");
+    history.push(HOME.route);
   };
   const openProductWebsite = () => {
     window.open(productWebsiteUrl, "_blank");
